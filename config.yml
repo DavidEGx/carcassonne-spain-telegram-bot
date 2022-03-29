@@ -1,0 +1,12 @@
+telegram:
+  token: put_telegram_token_here
+  groups:
+    - -649670766
+data:
+  schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1Z-0W7b6uBSpchz4FDeZVOJv1Ytu8CCjgpCItJuw1-nJRvEPB7ES80KmSheJ9uOSTGqXpPn1K1l6Z/pub?gid=1096309444&single=true&output=csv
+  results: https://docs.google.com/spreadsheets/d/e/2PACX-1vTtU9CrEVpPUQLGkQRHnuI8zJUFuuo5qgvfxCCJuoUmRsFFVVBPfyWzbYapwFxvQUhU9-G4QRZhxdfU/pub?gid=1096309444&single=true&output=csv
+  calendar: https://docs.google.com/spreadsheets/u/3/d/e/2PACX-1vQUfs_HUfPlUPAAHfFy42cURAj4NiEnd_TT-5e-TsMLA93FIckyxDk7uOGbNaRB-JB2VtBbQH94P_C3/pubhtml#
+
+schedule:
+  results: '7:00'
+  schedule: '7:01'

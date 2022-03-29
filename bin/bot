@@ -1,0 +1,229 @@
+#!/usr/bin/env python3
+"""Telegram Bot used for the Carcassonne Spain League.
+
+Daily fetches last day results and upcoming matches
+and post them to the Carcassonne Spain group.
+
+Code is very specific to my needs and not very DRY
+but... it works :D
+
+------------------------------------------------------------
+
+Usage:
+    1. Update config.yml with proper configuration.
+    2. Install dependencies: $ pip install -r requirements.txt
+    3. $ bin/bot
+
+Alternatively, using docker:
+    1. Update config.yml with proper configuration.
+    2. $ docker build -t carcassonnespain .
+    3. $ docker run carcassonnespain 
+
+------------------------------------------------------------
+
+Development using docker
+
+There is a Dockerfile inside dev/ that install vim with
+some plugins and libraries for development:
+    1. $ docker build -t carcassonnedev --file dev/Dockerfile .
+    2. $ docker run -it --volume $(pwd):/app carcassonnedev
+    3. $ vim bin/bot # or whatever
+
+------------------------------------------------------------
+"""
+import csv
+import datetime
+import logging
+import yaml
+import telegram
+from telegram.ext import Filters, MessageHandler, Updater
+import urllib.request
+
+with open('config.yml', 'r') as f:
+    config = yaml.safe_load(f)
+
+logging.basicConfig(
+   level=logging.DEBUG,
+   format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger()
+
+
+def fetch_results():
+    """Return string containing the results in the last 24h."""
+    message = ''
+    elite = []
+    red = []
+    blue = []
+
+    logger.info('Going to fetch results')
+
+    with urllib.request.urlopen(config['data']['results']) as response:
+        lines = [line.decode('utf-8') for line in response.readlines()]
+        cr = csv.reader(lines)
+        for row in cr:
+            txt = (
+                    f'{row[3]} <a href="{row[7]}">{row[5]} - {row[6]}</a> '
+                    f'{row[4]}\n'
+                  )
+            if (row[0] == 'Elite'):
+                elite.append(txt)
+            elif row[0] == 'Rojo':
+                red.append(txt)
+            elif row[0] == 'Azul':
+                blue.append(txt)
+
+    if len(elite):
+        message += '\nElite:\n'
+        for row in elite:
+            message += row
+    if len(red):
+        message += '\nRojo:\n'
+        for row in red:
+            message += row
+    if len(blue):
+        message += '\nAzul:\n'
+        for row in blue:
+            message += row
+
+    if message:
+        return f'<b>📡 Últimos resultados 📡\n{message}</b>'
+    else:
+        return ''
+
+
+def fetch_schedule():
+    """Return string containing the Duels that will be played today."""
+    message = ''
+    elite = []
+    red = []
+    blue = []
+
+    logger.info('Going to fetch schedule')
+
+    with urllib.request.urlopen(config['data']['schedule']) as response:
+        lines = [line.decode('utf-8') for line in response.readlines()]
+        cr = csv.reader(lines)
+        for row in cr:
+            txt = (
+                    f'<a href="{row[6]}">{row[1]}</a> - '
+                    f'<a href="{row[7]}">{row[2]}</a>: '
+                    f'<a href="{row[8]}">{row[5][:-3]}</a>\n'
+                  )
+            if (row[0] == 'Elite'):
+                elite.append(txt)
+            elif row[0] == 'Rojo':
+                red.append(txt)
+            elif row[0] == 'Azul':
+                blue.append(txt)
+
+    if len(elite):
+        message += '\nElite:\n'
+        for row in elite:
+            message += row
+    if len(red):
+        message += '\nRojo:\n'
+        for row in red:
+            message += row
+    if len(blue):
+        message += '\nAzul:\n'
+        for row in blue:
+            message += row
+
+    if message:
+        url = config['data']['calendar']
+        return f'<b><a href="{url}">⏰ Duelos para hoy ⏰</a>\n{message}</b>'
+    else:
+        return ''
+
+
+def send_results(context):
+    """Send message to all groups with the results in the last 24h."""
+    message = fetch_results()
+    if not message:
+        return
+
+    for group_id in config['telegram']['groups']:
+        try:
+            logger.info(f'Going to send results to {group_id}')
+            context.bot.send_message(chat_id=group_id,
+                                     text=message,
+                                     parse_mode=telegram.ParseMode.HTML,
+                                     disable_web_page_preview=True)
+        except:
+            # Completely ignore error ¯_(ツ)_/¯
+            # Changes are that the bot is no longer in the group as
+            # bot going out of groups is not being handled (due to laziness).
+            logger.error(f'Could not send message to group {group_id}')
+
+
+def send_schedule(context):
+    """Send message to all groups with the Duels for today."""
+    message = fetch_schedule()
+    if not message:
+        return
+
+    for group_id in config['telegram']['groups']:
+        try:
+            logger.info(f'Going to send schedule to {group_id}')
+            context.bot.send_message(chat_id=group_id,
+                                     text=message,
+                                     parse_mode=telegram.ParseMode.HTML,
+                                     disable_web_page_preview=True)
+        except:
+            # Ignore error ¯_(ツ)_/¯
+            # Changes are that the bot is no longer in the group as
+            # bot going out of groups is not being handled (due to laziness).
+            logger.error(f'Could not send message to group {group_id}')
+
+
+def new_chat_member(update, context):
+    """When bot is added to a group, add group to list of groups."""
+    m = update.message
+    bot = context.bot
+    group_id = m.chat.id
+    group_title = m.chat.title
+
+    for user in m.new_chat_members:
+        if bot.id == user.id:
+            # Only interested when the new chat member is the bot itself
+            # so the group can be added to group list.
+            # Ignore any other user.
+            if group_id not in config['telegram']['groups']:
+                logger.info(f"Adding new group {group_id} ({group_title})")
+                config['telegram']['groups'].append(group_id)
+
+    # Update config file with new group so everything
+    # keeps working when the bot is restarted.
+    with open('config.yml', 'w') as f:
+        yaml.dump(config, f, default_flow_style=False)
+
+
+def main():
+    """Run the bot.
+
+    * Bind events so bot monitors when it is added to a group.
+    * Create jobs so bot periodically sends messages.
+    """
+    updater = Updater(token=config['telegram']['token'], use_context=True)
+    msg_handler = MessageHandler(Filters.status_update.new_chat_members,
+                                 new_chat_member)
+    dispatcher = updater.dispatcher
+    dispatcher.add_handler(msg_handler)
+
+    time_results = datetime.time(
+                     *list(map(int, config['schedule']['results'].split(':')))
+                   )
+    time_schedule = datetime.time(
+                     *list(map(int, config['schedule']['schedule'].split(':')))
+                   )
+    updater.job_queue.run_daily(send_results, time_results)
+    updater.job_queue.run_daily(send_schedule, time_schedule)
+
+    updater.start_polling()
+    updater.idle()
+
+
+if __name__ == '__main__':
+    main()
+else:
+    raise RuntimeError("Don't know what to do")
