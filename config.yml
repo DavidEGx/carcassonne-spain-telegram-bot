@@ -10,3 +10,6 @@ data:
 schedule:
   results: '7:00'
   schedule: '7:01'
+
+players:
+  groups: ['Elite', 'Rojo', 'Azul']
