@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-3.0-only
+# Copyright (C) 2022 David Escribano <davidegx@gmail.com>
+
 """Telegram Bot used for the Carcassonne Spain League.
 
 Daily fetches last day results and upcoming matches
@@ -31,76 +34,12 @@ some plugins and libraries for development:
 
 ------------------------------------------------------------
 """
-import csv
 import datetime
-import logging
-import telegram
-from telegram.ext import Filters, MessageHandler, Updater
-import urllib.request
-import yaml
+from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 
-with open('config.yml', 'r') as f:
-    config = yaml.safe_load(f)
-
-logging.basicConfig(
-   level=logging.DEBUG,
-   format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger()
-
-
-def __create_text_result(row):
-    group, date_time, matchday, local_name, visitor_name, local_result, visitor_result, match_link = row
-    return f'{local_name} <a href="{match_link}">{local_result} - {visitor_result}</a> {visitor_name}\n'
-
-
-def __create_text_schedule(row):
-    group, local_name, visitor_name, matchday, date, time, local_link, visitor_link, match_link = row
-    return f'<a href="{local_link}">{local_name}</a> - <a href="{visitor_link}">{visitor_name}</a>: <a href="{match_link}">{time[:-3]}</a>\n'
-
-
-SUMMARY_DATA = {
-    'results': {'function': __create_text_result, 'text': '📡 Últimos resultados 📡'},
-    'schedule': {'function': __create_text_schedule, 'text': f'<a href="{config["data"]["calendar"]}">⏰ Duelos para hoy ⏰</a>'},
-}
-
-
-def fetch(summary_type, function, text):
-    """Return string containing the results in the last 24h."""
-
-    # FIXME: Used dict comprehension instead of `defaultdict(list)` to set a custom order
-    data = {name: [] for name in config['players']['groups']}
-
-    logger.info(f'Going to fetch {summary_type}')
-    with urllib.request.urlopen(config['data'][summary_type]) as response:
-        for row in csv.reader([line.decode('utf-8') for line in response.readlines()]):
-            data[row[0]].append(function(row))
-
-    if not data:
-        return ''
-
-    message = ' '.join([f'\n{name}:\n' + ''.join(rows) for name, rows in data.items()])
-    return f'<b>{text}\n{message}</b>'
-
-
-def send(context):
-    """Send message to all groups with the results in the last 24h."""
-    summary_type = context.job.context
-    message = fetch(summary_type, **SUMMARY_DATA[summary_type])
-    if not message:
-        return
-
-    for group_id in config['telegram']['groups']:
-        try:
-            logger.info(f'Going to send {summary_type} to {group_id}')
-            context.bot.send_message(chat_id=group_id,
-                                     text=message,
-                                     parse_mode=telegram.ParseMode.HTML,
-                                     disable_web_page_preview=True)
-        except telegram.error.TelegramError:
-            # Completely ignore error ¯_(ツ)_/¯
-            # Changes are that the bot is no longer in the group as
-            # bot going out of groups is not being handled (due to laziness).
-            logger.error(f'Could not send message to group {group_id}')
+from src import settings, commands
+from src.io import send
+from src.settings import config, logger, SUMMARY_DATA
 
 
 def new_chat_member(update, context):
@@ -118,10 +57,7 @@ def new_chat_member(update, context):
             logger.info(f"Adding new group {group_id} ({group_title})")
             config['telegram']['groups'].append(group_id)
 
-    # Update config file with new group so everything
-    # keeps working when the bot is restarted.
-    with open('config.yml', 'w') as f:
-        yaml.dump(config, f, default_flow_style=False)
+    settings.update()
 
 
 def main():
@@ -133,6 +69,9 @@ def main():
     updater = Updater(token=config['telegram']['token'], use_context=True)
     updater.dispatcher.add_handler(MessageHandler(Filters.status_update.new_chat_members,
                                                   new_chat_member))
+
+    updater.dispatcher.add_handler(CommandHandler('schedule', commands.schedule))
+    updater.dispatcher.add_handler(CommandHandler('results', commands.results))
 
     for summary_type in SUMMARY_DATA.keys():
         times = datetime.time(*list(map(int, config['schedule'][summary_type].split(':'))))
