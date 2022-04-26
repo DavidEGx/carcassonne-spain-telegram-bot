@@ -35,14 +35,15 @@ some plugins and libraries for development:
 ------------------------------------------------------------
 """
 import datetime
-from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
+from telegram import Update
+from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler, Updater, Job
 
 from src import settings, commands
 from src.io import send
 from src.settings import config, logger, SUMMARY_DATA
 
 
-def new_chat_member(update, context):
+def new_chat_member(update: Update, context: CallbackContext):
     """When bot is added to a group, add group to list of groups."""
     m = update.message
     bot = context.bot

@@ -17,12 +17,12 @@ logging.basicConfig(
 logger = logging.getLogger()
 
 
-def __create_text_result(row):
+def __create_text_result(row: tuple[str, ...]) -> str:
     group, date_time, matchday, local_name, visitor_name, local_result, visitor_result, match_link = row
     return f'{local_name} <a href="{match_link}">{local_result} - {visitor_result}</a> {visitor_name}\n'
 
 
-def __create_text_schedule(row):
+def __create_text_schedule(row: tuple[str, ...]) -> str:
     group, local_name, visitor_name, matchday, date, time, local_link, visitor_link, match_link = row
     return f'<a href="{local_link}">{local_name}</a> - <a href="{visitor_link}">{visitor_name}</a>: <a href="{match_link}">{time[:-3]}</a>\n'
 

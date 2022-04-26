@@ -4,12 +4,14 @@
 
 import csv
 import telegram
-import urllib
+from telegram.ext import CallbackContext
+from typing import Callable
+import urllib.request
 
 from src.settings import config, logger, SUMMARY_DATA
 
 
-def fetch(summary_type, function, text):
+def fetch(summary_type: str, function: Callable, text: str) -> str:
     """Return string containing the results in the last 24h."""
 
     # FIXME: Used dict comprehension instead of `defaultdict(list)` to set a custom order
@@ -27,7 +29,7 @@ def fetch(summary_type, function, text):
     return f'<b>{text}\n{message}</b>'
 
 
-def send(context):
+def send(context: CallbackContext):
     """Send message to all groups with the results in the last 24h."""
     summary_type = context.job.context
     message = fetch(**SUMMARY_DATA[summary_type])
