@@ -30,7 +30,7 @@ def fetch(summary_type, function, text):
 def send(context):
     """Send message to all groups with the results in the last 24h."""
     summary_type = context.job.context
-    message = fetch(summary_type, **SUMMARY_DATA[summary_type])
+    message = fetch(**SUMMARY_DATA[summary_type])
     if not message:
         return
 
