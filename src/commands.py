@@ -17,9 +17,9 @@ def help(update: Update, context: CallbackContext):
 
 def schedule(update: Update, context: CallbackContext):
     """Replies with the set of the next scheduled matches."""
-    update.message.reply_text(fetch(**SUMMARY_DATA['schedule']))
+    update.message.reply_html(fetch(**SUMMARY_DATA['schedule']), disable_web_page_preview=True)
 
 
 def results(update: Update, context: CallbackContext):
     """Replies with the set of the last results."""
-    update.message.reply_text(fetch(**SUMMARY_DATA['results']))
+    update.message.reply_html(fetch(**SUMMARY_DATA['results']), disable_web_page_preview=True)
