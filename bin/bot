@@ -20,7 +20,7 @@ Usage:
 Alternatively, using docker:
     1. Update config.yml with proper configuration.
     2. $ docker build -t carcassonnespain .
-    3. $ docker run carcassonnespain 
+    3. $ docker run carcassonnespain
 
 ------------------------------------------------------------
 
@@ -36,11 +36,11 @@ some plugins and libraries for development:
 """
 import datetime
 from telegram import Update
-from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler, Updater, Job
+from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler, Updater
 
 from src import settings, commands
 from src.io import send
-from src.settings import config, logger, SUMMARY_DATA
+from src.settings import config, logger
 
 
 def new_chat_member(update: Update, context: CallbackContext):
@@ -75,7 +75,7 @@ def main():
     updater.dispatcher.add_handler(CommandHandler('schedule', commands.schedule))
     updater.dispatcher.add_handler(CommandHandler('results', commands.results))
 
-    for summary_type in SUMMARY_DATA.keys():
+    for summary_type in config['schedule'].keys():
         times = datetime.time(*list(map(int, config['schedule'][summary_type].split(':'))))
         updater.job_queue.run_daily(send, times, context=summary_type)
 
