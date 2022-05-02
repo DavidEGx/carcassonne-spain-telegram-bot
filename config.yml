@@ -2,14 +2,29 @@ telegram:
   token: put_telegram_token_here
   groups:
     - -649670766
-data:
-  schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1Z-0W7b6uBSpchz4FDeZVOJv1Ytu8CCjgpCItJuw1-nJRvEPB7ES80KmSheJ9uOSTGqXpPn1K1l6Z/pub?gid=1096309444&single=true&output=csv
-  results: https://docs.google.com/spreadsheets/d/e/2PACX-1vTtU9CrEVpPUQLGkQRHnuI8zJUFuuo5qgvfxCCJuoUmRsFFVVBPfyWzbYapwFxvQUhU9-G4QRZhxdfU/pub?gid=1096309444&single=true&output=csv
-  calendar: https://docs.google.com/spreadsheets/u/3/d/e/2PACX-1vQUfs_HUfPlUPAAHfFy42cURAj4NiEnd_TT-5e-TsMLA93FIckyxDk7uOGbNaRB-JB2VtBbQH94P_C3/pubhtml#
 
 schedule:
   results: '7:00'
   schedule: '7:01'
 
-players:
-  groups: ['Elite', 'Rojo', 'Azul']
+bga:
+  player_url: 'https://boardgamearena.com/player?id={0}'
+  results_url: 'https://boardgamearena.com/gamestats?player={0}&opponent_id={1}&game_id=1&finished=1&start_date={2}&end_date={3}'
+
+header:
+  results: '📡 Últimos resultados 📡'
+  schedule: '<a href="https://docs.google.com/spreadsheets/u/3/d/e/2PACX-1vQUfs_HUfPlUPAAHfFy42cURAj4NiEnd_TT-5e-TsMLA93FIckyxDk7uOGbNaRB-JB2VtBbQH94P_C3/pubhtml#">⏰ Duelos para hoy ⏰</a>'
+
+groups:
+  Elite:
+    players: https://docs.google.com/spreadsheets/d/1h252aAp0vfPIa0jh4yq3ioygyC7Hp0n17wXGDfp-XGA/pub?gid=62495055&single=true&output=csv
+    results: https://docs.google.com/spreadsheets/d/e/2PACX-1vRpWAsBwLkaQLR9EdULzzJ3-4jALBkNFwe8r6CuPpxoSFFJfkOIYrKcbTpCHUXqIu0Kui_ti33hcSde/pub?gid=0&single=true&output=csv
+    schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vRpWAsBwLkaQLR9EdULzzJ3-4jALBkNFwe8r6CuPpxoSFFJfkOIYrKcbTpCHUXqIu0Kui_ti33hcSde/pub?gid=262320123&single=true&output=csv
+  Rojo:
+    players: https://docs.google.com/spreadsheets/d/1ioNSs0QPBjuxloidvZ5MfCpXsbwjtB3Zm8ofp7q4_6U/pub?gid=62495055&single=true&output=csv
+    results: https://docs.google.com/spreadsheets/d/e/2PACX-1vTmS9tYHkaM0ccbdDo0OslZp10e_aPG-bx3_XB9s1stlRnd_wcfaKEju-LRl6m9u8zCodil9tttmwVA/pub?gid=0&single=true&output=csv
+    schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vTmS9tYHkaM0ccbdDo0OslZp10e_aPG-bx3_XB9s1stlRnd_wcfaKEju-LRl6m9u8zCodil9tttmwVA/pub?gid=262320123&single=true&output=csv
+  Azul:
+    players: https://docs.google.com/spreadsheets/d/1b2kuPQQ9yQb2Y6qvBSbaN_BnfvGdU4SeOUwCuXYseaU/pub?gid=62495055&single=true&output=csv
+    results: https://docs.google.com/spreadsheets/d/e/2PACX-1vRiQ4oDFAeOJQSvxuWcG_E4uXR7aX36If0_0RXkq61CotgrB6jcTIf7_CTwz3Fe6lmhrxXns9jxuQ29/pub?gid=0&single=true&output=csv
+    schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vRiQ4oDFAeOJQSvxuWcG_E4uXR7aX36If0_0RXkq61CotgrB6jcTIf7_CTwz3Fe6lmhrxXns9jxuQ29/pub?gid=262320123&single=true&output=csv

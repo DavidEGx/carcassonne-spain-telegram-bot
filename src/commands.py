@@ -6,8 +6,7 @@
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from src.io import fetch
-from src.settings import SUMMARY_DATA
+from src.io import create_msg
 
 
 def help(update: Update, context: CallbackContext):
@@ -19,11 +18,11 @@ def help(update: Update, context: CallbackContext):
 
 def schedule(update: Update, context: CallbackContext):
     """Reply with the set of the next scheduled matches."""
-    msg = fetch(**SUMMARY_DATA['schedule'])
+    msg = create_msg('schedule')
     update.message.reply_html(msg, disable_web_page_preview=True)
 
 
 def results(update: Update, context: CallbackContext):
     """Reply with the set of the last results."""
-    msg = fetch(**SUMMARY_DATA['results'])
+    msg = create_msg('results')
     update.message.reply_html(msg, disable_web_page_preview=True)
