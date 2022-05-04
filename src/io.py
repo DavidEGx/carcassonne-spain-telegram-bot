@@ -6,6 +6,7 @@
 
 import csv
 from datetime import date, datetime, timedelta
+from operator import itemgetter
 import telegram
 from telegram.ext import CallbackContext
 import time
@@ -51,14 +52,14 @@ def __create_schedule_row(players: dict[str, int], row: dict) -> str:
     time_str = row["date"].time().strftime("%H:%M")
     return f'<a href="{local_link}">{row["local_name"]}</a> - ' \
            f'<a href="{visitor_link}">{row["visitor_name"]}</a>: ' \
-           f'<a href="{match_link}">{time_str}</a>\n'
+           f'<a href="{match_link}">{time_str}</a>'
 
 
 def __create_group_text(group: str, query_date: datetime,
                         fetch_func: Callable, row_func: Callable) -> str:
     """Return a string containing the text corresponding to a group."""
     players = fetch_group_players(group)
-    data = fetch_func(group, query_date)
+    data = sorted(fetch_func(group, query_date), key=itemgetter('date'))
     return '\n'.join([row_func(players, row) for row in data])
 
 
