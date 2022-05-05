@@ -16,7 +16,7 @@ header:
   schedule: '<a href="https://docs.google.com/spreadsheets/u/3/d/e/2PACX-1vQUfs_HUfPlUPAAHfFy42cURAj4NiEnd_TT-5e-TsMLA93FIckyxDk7uOGbNaRB-JB2VtBbQH94P_C3/pubhtml#">⏰ Duelos para hoy ⏰</a>'
 
 groups:
-  Elite:
+  Élite:
     players: https://docs.google.com/spreadsheets/d/1h252aAp0vfPIa0jh4yq3ioygyC7Hp0n17wXGDfp-XGA/pub?gid=62495055&single=true&output=csv
     results: https://docs.google.com/spreadsheets/d/e/2PACX-1vRpWAsBwLkaQLR9EdULzzJ3-4jALBkNFwe8r6CuPpxoSFFJfkOIYrKcbTpCHUXqIu0Kui_ti33hcSde/pub?gid=0&single=true&output=csv
     schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vRpWAsBwLkaQLR9EdULzzJ3-4jALBkNFwe8r6CuPpxoSFFJfkOIYrKcbTpCHUXqIu0Kui_ti33hcSde/pub?gid=262320123&single=true&output=csv
