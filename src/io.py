@@ -30,16 +30,18 @@ def __create_match_link(local_id: int, visitor_id: int,
                                                start_date, end_date)
 
 
-def __create_result_row(players: dict[str, int], result: dict) -> str:
+def __create_result_row(players: dict[str, int], row: dict) -> str:
     """Return a string containing the result row."""
-    local_id = players[result['local_name']]
-    visitor_id = players[result['visitor_name']]
-    local_result = result["local_result"]
-    visitor_result = result["visitor_result"]
-    match_link = __create_match_link(local_id, visitor_id, result['date'])
-    return f'{result["local_name"]} ' \
+    local_id = players[row['local_name']]
+    visitor_id = players[row['visitor_name']]
+    local_link = __create_player_link(local_id)
+    visitor_link = __create_player_link(visitor_id)
+    local_result = row["local_result"]
+    visitor_result = row["visitor_result"]
+    match_link = __create_match_link(local_id, visitor_id, row['date'])
+    return f'<a href="{local_link}">{row["local_name"]}</a> ' \
            f'<a href="{match_link}">{local_result} - {visitor_result}</a> ' \
-           f'{result["visitor_name"]}'
+           f'<a href="{visitor_link}">{row["visitor_name"]}</a>'
 
 
 def __create_schedule_row(players: dict[str, int], row: dict) -> str:
