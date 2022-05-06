@@ -45,7 +45,7 @@ def __create_result_row(players: dict[str, int], result: dict) -> str:
 def __create_schedule_row(players: dict[str, int], row: dict) -> str:
     """Return a string containing the schedule match row."""
     local_id = players[row['local_name']]
-    visitor_id = players[row['local_name']]
+    visitor_id = players[row['visitor_name']]
     local_link = __create_player_link(local_id)
     visitor_link = __create_player_link(visitor_id)
     match_link = __create_match_link(local_id, visitor_id, row['date'])
