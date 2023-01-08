@@ -5,9 +5,10 @@
 """Module implementing operations related to settings."""
 
 import logging
+import os
 import yaml
 
-CONFIG_FILE = 'config.yml'
+CONFIG_FILE = os.environ.get('CS_CONFIG_FILE', 'config.yml')
 
 with open(CONFIG_FILE, 'r') as f:
     config = yaml.safe_load(f)

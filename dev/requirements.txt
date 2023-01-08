@@ -1,6 +1,10 @@
-python-telegram-bot==13.11.0
-PyYAML
+cachetools
 flake8
 flake8-docstrings
+python-telegram-bot[job-queue]==20.0
+PyYAML
+requests_oauthlib
+typing_extensions
+tweepy==4.12.1
 yapf
 
