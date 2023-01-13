@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-3.0-only
+# Copyright (C) 2023 David Escribano <davidegx@gmail.com>
+
+"""Tweeter bot use for the Carcassonne Spain League.
+
+Daily fetches last day results and upcoming duels
+and Tweets them.
+
+------------------------------------------------------------
+
+Usage:
+    1. Update config.yml with proper configuration.
+    2. Install dependencies: $ pip install -r requirements.txt
+    3. $ bin/bot_twitter
+
+Alternatively, using docker:
+    1. Update config.yml with proper configuration.
+    2. $ docker build -t carcassonnespain .
+    3. $ docker run --entrypoint bin/twitter_bot carcassonnespain
+
+------------------------------------------------------------
+
+Development using docker
+
+There is a Dockerfile inside dev/ that install vim with
+some plugins and libraries for development:
+    1. $ docker build -t carcassonnedev --file dev/Dockerfile .
+    2. $ docker run -it --volume $(pwd):/app carcassonnedev
+    3. $ vim bin/bot_twitter # or whatever
+
+------------------------------------------------------------
+"""
+
+import argparse
+from datetime import date, timedelta
+
+from src.io.twitter import Twitter
+
+
+def main():
+    """Create tweet with yesterday results and today schedule."""
+    parser = argparse.ArgumentParser(description='Tweeter Bot')
+    parser.add_argument('--today',
+                        dest='today',
+                        help='Pretends today is a different day')
+    parser.add_argument('--test',
+                        dest='test',
+                        action='store_const',
+                        const=True,
+                        help='Do not tweet, just print message here')
+
+    args = parser.parse_args()
+    today = date.fromisoformat(args.today)
+
+    twitter = Twitter()
+
+    if args.test:
+        twitter.test(today, today)
+    else:
+        twitter.send(today - timedelta(1))        # Yesterday outcome
+        twitter.send(today, force_schedule=True)  # Schedule for today
+
+
+if __name__ == '__main__':
+    main()
+else:
+    raise RuntimeError("Don't know what to do")

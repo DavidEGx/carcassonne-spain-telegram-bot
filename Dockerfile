@@ -1,8 +1,9 @@
-FROM python:alpine3.14
+FROM python:alpine3.17
 
 COPY . /app
 WORKDIR /app
 
-RUN pip install --no-cache-dir -r requirements.txt
+ENV PYTHONPATH="/app:$PYTHONPATH"
+RUN pip install -r requirements.txt
 
-ENTRYPOINT /app/bin/bot
+ENTRYPOINT /app/bin/telegram_bot

@@ -1,1 +1,1 @@
-worker: python3 bin/bot
+worker: python3 bin/telegram_bot

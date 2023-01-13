@@ -1,12 +1,13 @@
-FROM python:alpine3.14
+FROM python:alpine3.17
 
-RUN apk update && apk add bash vim g++ make git curl py3-autopep8 ctags fzf
+RUN apk update && apk add bash vim g++ make git curl py3-autopep8 ctags fzf py3-pylint
 
 COPY . /app
 WORKDIR /app
+ENV PYTHONPATH="/app:$PYTHONPATH"
 
 # Python development dependencies setup
-RUN pip install --no-cache-dir -r dev/requirements.txt
+RUN pip install -r dev/requirements.txt
 RUN ["ln", "-s", "/usr/local/bin/flake8", "/usr/bin/flake8"]
 
 # Vim setup

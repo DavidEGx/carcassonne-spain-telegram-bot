@@ -1,4 +1,4 @@
-name: Pylint
+name: Unittest
 
 on: [push]
 
@@ -21,4 +21,4 @@ jobs:
         pip install -r requirements.txt
     - name: Analysing the code with pylint
       run: |
-        pylint --errors-only $(git ls-files '*.py')
+        python -m unittest
