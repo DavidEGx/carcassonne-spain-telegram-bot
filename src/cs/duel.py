@@ -45,7 +45,7 @@ class Duel:
             return self._url
 
         ddate = self.duel_date
-        base_url = config['bga']['results_url']
+        base_url = config['bga']['urls']['outcome_link']
         start = int(time.mktime(ddate.date().timetuple()))
         end = int(time.mktime((ddate.date() + timedelta(days=1)).timetuple()))
         self._url = base_url.format(self.p1.id, self.p2.id, start, end)
