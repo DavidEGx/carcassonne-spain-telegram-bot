@@ -1,12 +1,14 @@
 """Module for Carcassonne Spain Group class."""
 import csv
+import time
 from datetime import date, datetime
 from urllib import request
 from cachetools.func import ttl_cache
 
-from src.settings import config, logger
+from src.bga import BGA
 from src.cs.player import Player
 from src.cs.duel import Duel
+from src.settings import config, logger
 
 CACHE_TTL = 3600  # in seconds
 
@@ -110,6 +112,17 @@ class Group:
 
         filtered = filter(lambda m: m.duel_date.date() == query_date, duels)
         return sorted(list(filtered), key=lambda m: m.duel_date)
+
+    def wrong_outcome(self, query_date: date) -> list[Duel]:
+        """Return duels with outcome that need to be checked."""
+        bga = BGA()
+        wrong_duels: list[Duel] = []
+        for duel in self.duels(query_date):
+            if not bga.check_duel(duel):
+                wrong_duels.append(duel)
+            time.sleep(config['bga']['interval'])
+
+        return wrong_duels
 
     def __str__(self):
         """Name of the group."""

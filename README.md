@@ -46,7 +46,7 @@ Again, if you prefer to use Docker:
 $ docker run carcassonnespain
 ```
 
-```shell
+```bash
 $ docker run --entrypoint bin/twitter_bot carcassonnespain 
 ```
 

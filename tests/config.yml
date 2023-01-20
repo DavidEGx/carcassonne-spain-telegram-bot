@@ -12,8 +12,13 @@ schedule:
   schedule: '07:01'
 
 bga:
-  player_url: 'https://boardgamearena.com/player?id={0}'
-  results_url: 'https://boardgamearena.com/gamestats?player={0}&opponent_id={1}&game_id=1&finished=1&start_date={2}&end_date={3}'
+  urls:
+    home: https://en.boardgamearena.com/account
+    login: https://en.boardgamearena.com/account/account/login.html
+    csrf: https://boardgamearena.com/gamestats?player=84486751&game_id=1
+    outcome: https://boardgamearena.com/gamestats/gamestats/getGames.html?player={0}&opponent_id={1}&game_id=1&finished=1&start_date={2}&end_date={3}&updateStats=0
+    player_link: 'https://boardgamearena.com/player?id={0}'
+    outcome_link: 'https://boardgamearena.com/gamestats?player={0}&opponent_id={1}&game_id=1&finished=1&start_date={2}&end_date={3}'
 
 header:
   results: '📡 Últimos resultados 📡'
