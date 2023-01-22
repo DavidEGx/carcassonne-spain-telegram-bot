@@ -10,7 +10,7 @@ class TestTwitter(unittest.TestCase):
 
     def test_schedule(self):
         """Check I get the right messasge for scheduled duels."""
-        twitter = Twitter()
+        twitter = Twitter(season=2)
 
         with self.subTest(i="Single Msg"):
             mydate = date.fromisoformat('2022-11-01')
@@ -51,7 +51,7 @@ class TestTwitter(unittest.TestCase):
 
     def test_outcome(self):
         """Check I get the right messasge for played duels."""
-        twitter = Twitter()
+        twitter = Twitter(season=2)
 
         with self.subTest(i="Single Msg"):
             mydate = date.fromisoformat('2022-11-01')

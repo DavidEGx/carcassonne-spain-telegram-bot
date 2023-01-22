@@ -19,8 +19,6 @@ from src.cs.league import League
 from telegram import constants as tconstants
 from telegram.ext import Application
 
-league = League()
-
 
 # pyright: strict
 async def main():
@@ -34,6 +32,10 @@ async def main():
                         action='store_const',
                         const=True,
                         help='Do nothing in Telegram, just print message here')
+    parser.add_argument('--season',
+                        dest='season',
+                        type=int,
+                        help='Season, last season is used by default')
 
     args = parser.parse_args()
     if args.today:
@@ -45,7 +47,7 @@ async def main():
     all_good = True
     msg = ""
 
-    for group in league.groups:
+    for group in League(season=args.season).groups:
         duels = group.wrong_outcome(yesterday)
         if duels:
             all_good = False

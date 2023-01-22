@@ -10,7 +10,7 @@ class TestTelegram(unittest.TestCase):
 
     def test_schedule(self):
         """Check I get the right messasge for scheduled duels."""
-        telegram = Telegram()
+        telegram = Telegram(season=2)
         mydate = date.fromisoformat('2022-11-01')
         expected = (['⏰ Duelos para hoy ⏰\n\n'
                      'Élite:\n'
@@ -26,7 +26,7 @@ class TestTelegram(unittest.TestCase):
 
     def test_outcome(self):
         """Check I get the right messasge for played duels."""
-        telegram = Telegram()
+        telegram = Telegram(season=2)
         mydate = date.fromisoformat('2022-11-01')
         expected = (['📡 Últimos resultados 📡\n\n'
                      'Élite:\n'

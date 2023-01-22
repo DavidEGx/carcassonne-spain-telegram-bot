@@ -1,5 +1,6 @@
 """Module for Carcassonne Spain Twitter class."""
 from datetime import date
+from typing import Optional
 import tweepy
 
 from src.cs.league import League
@@ -11,9 +12,9 @@ from src.settings import config, logger
 class Twitter(IoBase):
     """Encapsulate all Carcassonne Spain league tweeter communication."""
 
-    def __init__(self):
+    def __init__(self, season: Optional[int] = None):
         """Initialize the Tweet object."""
-        self.league = League()
+        self.league = League(season)
         self.max_size = 280  # Tweet size
 
     def _make_bold(self, text: str) -> str:

@@ -23,9 +23,10 @@ class Group:
     some already played, some that will be played in the future.
     """
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, cnf: dict[str, str]):
         """Build a group."""
         self.name = name
+        self.config = cnf
 
     @property
     @ttl_cache(ttl=CACHE_TTL)
@@ -33,7 +34,7 @@ class Group:
         """List of players within the group."""
         logger.info(f"Fetching players for {self} group")
 
-        url = config['groups'][self.name]['players']
+        url = self.config['players']
         with request.urlopen(url) as resp:
             lines = [line.decode('utf-8') for line in resp.readlines()]
             return [Player(int(row['id']), row['name'])
@@ -54,7 +55,7 @@ class Group:
         logger.info(f"Fetching schedule for {self} group")
 
         schedule: list[Duel] = []
-        url = config['groups'][self.name]['schedule']
+        url = self.config['schedule']
         with request.urlopen(url) as resp:
             lines = [line.decode('utf-8') for line in resp.readlines()]
             for row in csv.DictReader(lines):
@@ -62,7 +63,10 @@ class Group:
                 player_2 = self._find_player(row['player2'])
 
                 date_str = f'{row["date"]} {row["time"]}'
-                ddate = datetime.strptime(date_str, '%d/%m/%Y %H:%M:%S')
+                try:
+                    ddate = datetime.strptime(date_str, '%d/%m/%Y %H:%M:%S')
+                except Exception:
+                    ddate = datetime.strptime(date_str, '%d/%m/%Y %H:%M')
 
                 schedule.append(Duel(p1=player_1,
                                      p2=player_2,
@@ -77,7 +81,7 @@ class Group:
         logger.info(f"Fetching outcome for {self} group")
 
         outcome: list[Duel] = []
-        url = config['groups'][self.name]['results']
+        url = self.config['results']
         with request.urlopen(url) as resp:
             lines = [line.decode('utf-8') for line in resp.readlines()]
 
