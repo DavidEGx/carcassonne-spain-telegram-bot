@@ -49,11 +49,15 @@ def main():
                         action='store_const',
                         const=True,
                         help='Do not tweet, just print message here')
+    parser.add_argument('--season',
+                        dest='season',
+                        type=int,
+                        help='Season, last season is used by default')
 
     args = parser.parse_args()
     today = date.fromisoformat(args.today)
 
-    twitter = Twitter()
+    twitter = Twitter(args.season)
 
     if args.test:
         twitter.test(today, today)

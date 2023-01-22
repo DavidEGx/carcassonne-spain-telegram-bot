@@ -32,12 +32,12 @@ class TestCS(unittest.TestCase):
                     Player(84874870, 'ziamat'),
                     Player(11329731, 'Zokanero')]
 
-        got = League().group('Élite').players
+        got = League(season=2).group('Élite').players
         self.assertEqual(got, expected)
 
     def test_duels(self):
         """Check duels for a given day are returned correctly."""
-        league = League()
+        league = League(season=2)
         mydate = date.fromisoformat('2022-11-01')
 
         with self.subTest(i="outcome"):

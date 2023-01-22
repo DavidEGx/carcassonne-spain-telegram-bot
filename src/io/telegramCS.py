@@ -4,6 +4,7 @@
 """Telegram message creation."""
 import asyncio
 from datetime import date
+from typing import Optional
 from telegram.ext import Application
 import telegram
 
@@ -16,12 +17,16 @@ from src.settings import config, logger
 class Telegram(IoBase):
     """Encapsulate all Carcassonne Spain league telegram communication."""
 
+    def __init__(self, season: Optional[int] = None):
+        """Initialize the Telegram object."""
+        self.league = League(season)
+
     def create_msg(self,
                    query_date: date,
                    force_schedule: bool = False) -> list[str]:
         """Return a string corresponding to the expected summary type."""
         html_body = ""
-        for group in League().groups:
+        for group in self.league.groups:
             name = group.name
             duels = group.duels(query_date, force_schedule)
             if duels:

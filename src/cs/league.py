@@ -1,5 +1,6 @@
 """Module containg Carcassonne Spain League class."""
 from functools import cache
+from typing import Optional
 
 from src.cs.group import Group
 from src.settings import config
@@ -17,18 +18,31 @@ class League:
     this class exists.
     """
 
-    def __init__(self):
+    def __init__(self, season: Optional[int] = None):
         """Initialize Carcassonne Spain League object."""
+        if season:
+            self.season = season
+        else:
+            self.season = max([int(cnf['season']) for cnf in config['league']])
+
         self._groups: list[Group] = []
 
     @property
     def groups(self) -> list[Group]:
         """List of groups within the League."""
+        cnf_groups = [cnf['groups'] for cnf in config['league']
+                      if cnf['season'] == self.season]
+        if cnf_groups:
+            cnf_groups = cnf_groups[0]
+        else:
+            raise ValueError(f"Season {self.season} not found")
+
         if not self._groups:
             group_names = sorted(
-                            config['groups'],
-                            key=lambda group: config['groups'][group]['order'])
-            self._groups = [Group(name) for name in group_names]
+                            cnf_groups,
+                            key=lambda group: cnf_groups[group]['order'])
+            self._groups = [Group(name, cnf_groups[name])
+                            for name in group_names]
 
         return self._groups
 
