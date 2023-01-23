@@ -55,7 +55,10 @@ def main():
                         help='Season, last season is used by default')
 
     args = parser.parse_args()
-    today = date.fromisoformat(args.today)
+    if args.today:
+        today = date.fromisoformat(args.today)
+    else:
+        today = date.today()
 
     twitter = Twitter(args.season)
 
