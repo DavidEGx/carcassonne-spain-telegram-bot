@@ -30,7 +30,7 @@ class Telegram(IoBase):
             name = group.name
             duels = group.duels(query_date, force_schedule)
             if duels:
-                html_body += f"\n\n{name}:\n"
+                html_body += f"\n\n<b>{name}</b>:\n"
                 html_body += "\n".join([d.html() for d in duels])
 
         if not html_body:
@@ -42,7 +42,7 @@ class Telegram(IoBase):
         else:
             header = config['header']['results']
 
-        return [header + html_body]
+        return [f"<b>{header}</b>{html_body}"]
 
     def send(self, query_date: date, force_schedule: bool = False) -> None:
         """Send Telgram message with duels schedule/outcome for a date."""

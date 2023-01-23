@@ -10,7 +10,7 @@ class Player:
         """Build a player."""
         self.id = player_id
         self.name = name
-        self.url = config['bga']['urls']['player_link'].format(id)
+        self.url = config['bga']['urls']['player_link'].format(player_id)
 
     def html(self):
         """Player name with link to BGA profile."""

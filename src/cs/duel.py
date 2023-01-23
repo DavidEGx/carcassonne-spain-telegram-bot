@@ -59,7 +59,7 @@ class Duel:
         time_str = self.duel_date.time().strftime("%H:%M")
 
         if self.p1_score is None:
-            return f'{p1_html} - {p2_html}: <a href="{url}">{time_str}</a>'
+            return f'{p1_html} - {p2_html}: {time_str}'
 
         return (f'{self.p1.name} <a href="{url}">'
                 f'{self.p1_score} - {self.p2_score}'
