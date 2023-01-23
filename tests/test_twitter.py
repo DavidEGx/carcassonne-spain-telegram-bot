@@ -16,12 +16,12 @@ class TestTwitter(unittest.TestCase):
             mydate = date.fromisoformat('2022-11-01')
             expected = [("\n⏰ Duelos para hoy ⏰\n\n"
                          "𝗘́𝗹𝗶𝘁𝗲:\n"
-                         "IQIUB - oscaridis\n"
-                         "LOKU_ELO - valle13\n\n"
+                         "IQIUB - oscaridis: 22:00\n"
+                         "LOKU_ELO - valle13: 22:00\n\n"
                          "𝗥𝗼𝗷𝗼:\n"
-                         "ChicaPop - Fer_Nandet\n"
-                         "dgsenande - Srta Meeple\n"
-                         "FEIFER90 - Fisiquito88")]
+                         "ChicaPop - Fer_Nandet: 11:00\n"
+                         "dgsenande - Srta Meeple: 19:00\n"
+                         "FEIFER90 - Fisiquito88: 21:30")]
 
             got = twitter.create_msg(mydate, force_schedule=True)
             self.assertEqual(got, expected)
@@ -30,21 +30,22 @@ class TestTwitter(unittest.TestCase):
             mydate = date.fromisoformat('2022-11-15')
             expected = [("\n⏰ Duelos para hoy ⏰\n\n"
                          "𝗘́𝗹𝗶𝘁𝗲:\n"
-                         "gudul - ziamat\n"
-                         "MadCan - RaKaRoT\n\n"
+                         "gudul - ziamat: 20:00\n"
+                         "MadCan - RaKaRoT: 20:30\n\n"
                          "𝗔𝘇𝘂𝗹:\n"
-                         "senglar - camares\n"
-                         "senglar - Deskey\n"
-                         "2020Rafa - thePOC\n"
-                         "Presmanes - danisvh\n\n"
-                         "𝗥𝗼𝗷𝗼:\n"
-                         "Rolente - dgsenande\n"
-                         "saizechezarreta - Elige Juego"),
-                        ("\n𝗩𝗲𝗿𝗱𝗲:\n"
-                         "Douglasgti - Felipelpm\n"
-                         "Jsoutinho - Miguel Eiffel\n"
-                         "Ardacho - Algueroth\n"
-                         "Pandemias86 - cesarhf73")]
+                         "senglar - camares: 15:00\n"
+                         "senglar - Deskey: 19:00\n"
+                         "2020Rafa - thePOC: 22:00\n"
+                         "Presmanes - danisvh: 22:30"),
+                        (
+                         "\n𝗥𝗼𝗷𝗼:\n"
+                         "Rolente - dgsenande: 19:00\n"
+                         "saizechezarreta - Elige Juego: 22:00\n\n"
+                         "𝗩𝗲𝗿𝗱𝗲:\n"
+                         "Douglasgti - Felipelpm: 20:30\n"
+                         "Jsoutinho - Miguel Eiffel: 21:00\n"
+                         "Ardacho - Algueroth: 21:45\n"
+                         "Pandemias86 - cesarhf73: 22:45")]
 
             got = twitter.create_msg(mydate, force_schedule=True)
             self.assertEqual(got, expected)

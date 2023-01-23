@@ -71,7 +71,8 @@ class Duel:
         p2_str = self.p2.name
 
         if self.p1_score is None:
-            return f"{p1_str} - {p2_str}"
+            time_str = self.duel_date.time().strftime("%H:%M")
+            return f"{p1_str} - {p2_str}: {time_str}"
 
         return f"{p1_str} {self.p1_score} - {self.p2_score} {p2_str}"
 
