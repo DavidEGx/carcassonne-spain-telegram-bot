@@ -32,6 +32,11 @@ async def main():
                         action='store_const',
                         const=True,
                         help='Do nothing in Telegram, just print message here')
+    parser.add_argument('--report',
+                        dest='report',
+                        type=int,
+                        default=1,
+                        help='Report mode, check number of days passed as parameter')
     parser.add_argument('--season',
                         dest='season',
                         type=int,
@@ -42,19 +47,21 @@ async def main():
         today = date.fromisoformat(args.today)
     else:
         today = date.today()
-    yesterday = today - timedelta(1)
 
-    all_good = True
+    current = today - timedelta(days=args.report - 1)
     msg = ""
 
-    for group in League(season=args.season).groups:
-        duels = group.wrong_outcome(yesterday)
-        if duels:
-            all_good = False
-            for duel in duels:
-                msg += f"⚠️ Dubious duel outcome: {duel.html()}\n"
+    while current <= today:
+        day_before = current - timedelta(days=1)
 
-    if all_good:
+        for group in League(season=args.season).groups:
+            duels = group.wrong_outcome(day_before)
+            for duel in duels:
+                msg += f"⚠️ Dubious duel outcome ({current}): {duel.html()}\n"
+
+        current = current + timedelta(days=1)
+
+    if not msg:
         quit()
 
     if args.test:

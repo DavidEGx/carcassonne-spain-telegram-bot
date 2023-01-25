@@ -19,7 +19,9 @@ class Duel:
                  p2: Player,
                  duel_date: datetime,
                  p1_score: Optional[int] = None,
-                 p2_score: Optional[int] = None):
+                 p2_score: Optional[int] = None,
+                 played: bool = False,
+                 played_for_real: bool = False):
         """Build a duel.
 
         Parameters
@@ -29,13 +31,17 @@ class Duel:
             duel_date Approximate date of the duel.
             p1_score Score of player 1 (If the duel was played already)
             p1_score Score of player 2 (If the duel was played already)
-
+            played: True if the duel was played
+            played_for_real: Same as played except when one player didn't show
+                             (In that case played=True, played_for_real=False)
         """
         self.p1 = p1
         self.p2 = p2
         self.duel_date = duel_date
         self.p1_score = p1_score
         self.p2_score = p2_score
+        self.played = played
+        self.played_for_real = played_for_real
         self._url = None
 
     @property

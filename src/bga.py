@@ -68,6 +68,13 @@ class BGA:
                 logger.warn(f"More than 3 games found for {duel}")
                 return False
 
+        if not duel.played_for_real:
+            # Someone marked the game as not played
+            return (len(tables) == 0 and (
+                        (duel.p1_score == 2 and duel.p2_score == 0) or
+                        (duel.p1_score == 0 and duel.p2_score == 2))
+                    )
+
         if len(tables) < 2:
             # Try older games, maybe game results were submitted late
             start_date = str(base_date - 24 * 3 * 3600)

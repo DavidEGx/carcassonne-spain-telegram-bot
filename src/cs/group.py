@@ -92,12 +92,15 @@ class Group:
                 ddate = datetime.strptime(date_str, '%d/%m/%Y %H:%M:%S')
                 score_1 = int(row['score1'])
                 score_2 = int(row['score2'])
+                played = not row.get('not played', False)
 
                 outcome.append(Duel(p1=player_1,
                                     p2=player_2,
                                     duel_date=ddate,
                                     p1_score=score_1,
-                                    p2_score=score_2))
+                                    p2_score=score_2,
+                                    played=True,
+                                    played_for_real=played))
 
             return outcome
 
