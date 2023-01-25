@@ -43,7 +43,7 @@ class Group:
     def _find_player(self, name: str) -> Player:
         """Find a player given its name."""
         for player in self.players:
-            if player.name == name:
+            if player.name.lower() == name.lower():
                 return player
 
         raise LookupError(f"Player '{name}' not found in group {self}")
