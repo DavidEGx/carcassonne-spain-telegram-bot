@@ -1,6 +1,7 @@
 """Common IO stuff."""
 from abc import ABC, abstractmethod
 from datetime import date, timedelta
+from typing import Any
 
 
 # pyright: strict
@@ -10,7 +11,8 @@ class IoBase(ABC):
     @abstractmethod
     def create_msg(self,
                    query_date: date,
-                   force_schedule: bool = False) -> list[str]:
+                   force_schedule: bool = False
+                   ) -> list[str] | list[dict[str, Any]]:
         """Return list of messages formatted appropiately."""
 
     @abstractmethod

@@ -48,7 +48,10 @@ class BGA:
 
     def check_duel(self, duel: Duel) -> bool:
         """Check submitted outcome for single duel matches reality."""
-        base_date = round(duel.duel_date.timestamp())
+        if duel.outcome_timestamp is None:
+            raise Exception("Duel not played, something went wrong")
+
+        base_date = round(duel.outcome_timestamp.timestamp())
         start_date = str(base_date - 24 * 1 * 3600)
         end_date = str(base_date + 24 * 1 * 3600)
 
