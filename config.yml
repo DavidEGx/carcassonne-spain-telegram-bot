@@ -23,7 +23,7 @@ schedule:
 bga:
   user: someuser
   password: 123456_or_maybe_a_good_one
-  interval: 2 # Seconds before doing repeated requests
+  interval: 5 # Seconds before doing repeated requests
   urls:
     home: https://en.boardgamearena.com/account
     login: https://en.boardgamearena.com/account/account/login.html
@@ -42,21 +42,25 @@ league:
     groups:
       Élite:
         order: 1
+        gcalendar_color: 3
         players: https://docs.google.com/spreadsheets/d/e/2PACX-1vTe3Tz79ZRI1PuCV8vAicUGambbx0TgLXVTzhtwl240E3mOvS_uf4rgVJ6VkJ2RX3i3q1qQrVNwPrnP/pub?gid=363689283&single=true&output=csv
         results: https://docs.google.com/spreadsheets/d/e/2PACX-1vQNcqIT8VksaP1XwBofMIzTrina9m0DmAxhWSINyUSK7owu0MO8etxpTqQS7roY-2j_T6GjhurPtAwX/pub?gid=0&single=true&output=csv
         schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vQmuYMhCUy2PwRdsjtZ8fmRoUTrK-6z-Rgc44WD1XiHzgDefIvT6MHQFZN6GPGzNjERW-y905bEkRN5/pub?gid=0&single=true&output=csv
       Azul:
         order: 2
+        gcalendar_color: 9
         players: https://docs.google.com/spreadsheets/d/e/2PACX-1vTe3Tz79ZRI1PuCV8vAicUGambbx0TgLXVTzhtwl240E3mOvS_uf4rgVJ6VkJ2RX3i3q1qQrVNwPrnP/pub?gid=1464030688&single=true&output=csv
         results: https://docs.google.com/spreadsheets/d/e/2PACX-1vQNcqIT8VksaP1XwBofMIzTrina9m0DmAxhWSINyUSK7owu0MO8etxpTqQS7roY-2j_T6GjhurPtAwX/pub?gid=1115036289&single=true&output=csv
         schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vQmuYMhCUy2PwRdsjtZ8fmRoUTrK-6z-Rgc44WD1XiHzgDefIvT6MHQFZN6GPGzNjERW-y905bEkRN5/pub?gid=1518156767&single=true&output=csv
       Rojo:
         order: 3
+        gcalendar_color: 11
         players: https://docs.google.com/spreadsheets/d/e/2PACX-1vTe3Tz79ZRI1PuCV8vAicUGambbx0TgLXVTzhtwl240E3mOvS_uf4rgVJ6VkJ2RX3i3q1qQrVNwPrnP/pub?gid=561683622&single=true&output=csv
         results: https://docs.google.com/spreadsheets/d/e/2PACX-1vQNcqIT8VksaP1XwBofMIzTrina9m0DmAxhWSINyUSK7owu0MO8etxpTqQS7roY-2j_T6GjhurPtAwX/pub?gid=1233394230&single=true&output=csv
         schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vQmuYMhCUy2PwRdsjtZ8fmRoUTrK-6z-Rgc44WD1XiHzgDefIvT6MHQFZN6GPGzNjERW-y905bEkRN5/pub?gid=1608355815&single=true&output=csv
       Verde:
         order: 4
+        gcalendar_color: 2
         players: https://docs.google.com/spreadsheets/d/e/2PACX-1vTe3Tz79ZRI1PuCV8vAicUGambbx0TgLXVTzhtwl240E3mOvS_uf4rgVJ6VkJ2RX3i3q1qQrVNwPrnP/pub?gid=481307165&single=true&output=csv
         results: https://docs.google.com/spreadsheets/d/e/2PACX-1vQNcqIT8VksaP1XwBofMIzTrina9m0DmAxhWSINyUSK7owu0MO8etxpTqQS7roY-2j_T6GjhurPtAwX/pub?gid=153836702&single=true&output=csv
         schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vQmuYMhCUy2PwRdsjtZ8fmRoUTrK-6z-Rgc44WD1XiHzgDefIvT6MHQFZN6GPGzNjERW-y905bEkRN5/pub?gid=1095718215&single=true&output=csv
@@ -64,21 +68,25 @@ league:
     groups:
       Élite:
         order: 1
+        gcalendar_color: 3
         players: https://docs.google.com/spreadsheets/d/e/2PACX-1vSTCu8KzgqQEvK9r5ChHn42owKyzbYKf4Dpasg1Gzra8JTd7LvqnqJ4tSO_sEdtOT3fpayT1Qtem0dI/pub?output=csv&gid=363689283
         results: https://docs.google.com/spreadsheets/d/e/2PACX-1vSI-AcWpDBAgk_Q-u4q884fliIQvruzu-ar45b0UNCCbI43GJV9yzWJjggrmJmGVo0PtX2KdvvgAZGC/pub?output=csv&gid=0
         schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vQsrWnQbutIEgz7Zz9zcR4DYBJacHnWg5jch07FyBl3L3b8oWyNaIPhZ6uYB6PyooKJD1X3VHMJJr_H/pub?gid=0&single=true&output=csv
       Segunda:
         order: 2
+        gcalendar_color: 9
         players: https://docs.google.com/spreadsheets/d/e/2PACX-1vSTCu8KzgqQEvK9r5ChHn42owKyzbYKf4Dpasg1Gzra8JTd7LvqnqJ4tSO_sEdtOT3fpayT1Qtem0dI/pub?output=csv&gid=561683622
         results: https://docs.google.com/spreadsheets/d/e/2PACX-1vSI-AcWpDBAgk_Q-u4q884fliIQvruzu-ar45b0UNCCbI43GJV9yzWJjggrmJmGVo0PtX2KdvvgAZGC/pub?output=csv&gid=1078056963
         schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vQsrWnQbutIEgz7Zz9zcR4DYBJacHnWg5jch07FyBl3L3b8oWyNaIPhZ6uYB6PyooKJD1X3VHMJJr_H/pub?gid=384769640&single=true&output=csv
       Naranja:
-        order: 3
+        order: 6
+        gcalendar_color: 3
         players: https://docs.google.com/spreadsheets/d/e/2PACX-1vSTCu8KzgqQEvK9r5ChHn42owKyzbYKf4Dpasg1Gzra8JTd7LvqnqJ4tSO_sEdtOT3fpayT1Qtem0dI/pub?output=csv&gid=481307165
         results: https://docs.google.com/spreadsheets/d/e/2PACX-1vSI-AcWpDBAgk_Q-u4q884fliIQvruzu-ar45b0UNCCbI43GJV9yzWJjggrmJmGVo0PtX2KdvvgAZGC/pub?output=csv&gid=1290077699
         schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vQsrWnQbutIEgz7Zz9zcR4DYBJacHnWg5jch07FyBl3L3b8oWyNaIPhZ6uYB6PyooKJD1X3VHMJJr_H/pub?gid=828628157&single=true&output=csv 
       Rosa:
         order: 4
+        gcalendar_color: 4
         players: https://docs.google.com/spreadsheets/d/e/2PACX-1vSTCu8KzgqQEvK9r5ChHn42owKyzbYKf4Dpasg1Gzra8JTd7LvqnqJ4tSO_sEdtOT3fpayT1Qtem0dI/pub?output=csv&gid=1464030688
         results: https://docs.google.com/spreadsheets/d/e/2PACX-1vSI-AcWpDBAgk_Q-u4q884fliIQvruzu-ar45b0UNCCbI43GJV9yzWJjggrmJmGVo0PtX2KdvvgAZGC/pub?output=csv&gid=413133258
         schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vQsrWnQbutIEgz7Zz9zcR4DYBJacHnWg5jch07FyBl3L3b8oWyNaIPhZ6uYB6PyooKJD1X3VHMJJr_H/pub?gid=1174688863&single=true&output=csv

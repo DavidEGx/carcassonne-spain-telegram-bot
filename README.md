@@ -47,7 +47,7 @@ $ docker run carcassonnespain
 ```
 
 ```bash
-$ docker run --entrypoint bin/twitter_bot carcassonnespain 
+$ docker run --entrypoint bin/twitter_bot carcassonnespain
 ```
 
 Once *telegram_bot* is running, it will start to send daily updates to all the groups at the time specified in [config.yml](config.yml).

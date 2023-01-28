@@ -43,10 +43,14 @@ class TestCS(unittest.TestCase):
         with self.subTest(i="outcome"):
             expected = [Duel(Player(86256371, 'LOKU_ELO'),
                              Player(88262806, 'valle13'),
+                             datetime.fromisoformat('2022-11-01 22:00:00'),
+                             datetime.fromisoformat('2022-10-31 19:41:01'),
                              datetime.fromisoformat('2022-11-01 22:26:50'),
                              2, 0),
                         Duel(Player(88929304, 'IQIUB'),
                              Player(37324330, 'oscaridis'),
+                             datetime.fromisoformat('2022-11-01 22:00:00'),
+                             datetime.fromisoformat('2022-10-30 22:34:10'),
                              datetime.fromisoformat('2022-11-01 22:34:04'),
                              1, 2)]
 
@@ -57,15 +61,15 @@ class TestCS(unittest.TestCase):
             expected = [Duel(Player(89619167, 'ChicaPop'),
                              Player(83824802, 'Fer_Nandet'),
                              datetime.fromisoformat('2022-11-01 11:00:00'),
-                             None, None),
+                             datetime.fromisoformat('2022-11-01 09:19:03')),
                         Duel(Player(91775060, 'dgsenande'),
                              Player(89456958, 'Srta Meeple'),
                              datetime.fromisoformat('2022-11-01 19:00:00'),
-                             None, None),
+                             datetime.fromisoformat('2022-10-30 18:01:27')),
                         Duel(Player(86463243, 'FEIFER90'),
                              Player(1680842, 'Fisiquito88'),
                              datetime.fromisoformat('2022-11-01 21:30:00'),
-                             None, None)]
+                             datetime.fromisoformat('2022-10-28 22:53:49'))]
 
             got = league.group('Rojo').duels(mydate, force_schedule=True)
             self.assertEqual(got, expected)

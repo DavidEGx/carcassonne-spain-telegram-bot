@@ -1,6 +1,10 @@
 cachetools
 flake8
 flake8-docstrings
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+pylint
 python-telegram-bot[job-queue]==20.0
 PyYAML
 requests_oauthlib

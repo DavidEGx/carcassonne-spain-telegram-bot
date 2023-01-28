@@ -29,6 +29,11 @@ class Group:
         self.config = cnf
 
     @property
+    def gcalendar_color(self) -> int:
+        """Return Google Calendar color Id."""
+        return int(self.config.get('gcalendar_color', "8"))
+
+    @property
     @ttl_cache(ttl=CACHE_TTL)
     def players(self) -> list[Player]:
         """List of players within the group."""
@@ -48,6 +53,13 @@ class Group:
 
         raise LookupError(f"Player '{name}' not found in group {self}")
 
+    def _find_scheduled_duel(self, p1: Player, p2: Player) -> Duel:
+        for duel in self.schedule:
+            if p1 == duel.p1 and p2 == duel.p2:
+                return duel
+
+        raise LookupError(f"Duel for {p1} and {p2} not found")
+
     @property
     @ttl_cache(ttl=CACHE_TTL)
     def schedule(self) -> list[Duel]:
@@ -61,16 +73,18 @@ class Group:
             for row in csv.DictReader(lines):
                 player_1 = self._find_player(row['player1'])
                 player_2 = self._find_player(row['player2'])
+                timestamp = datetime.strptime(row["timestamp"], '%d/%m/%Y %H:%M:%S')
 
                 date_str = f'{row["date"]} {row["time"]}'
                 try:
-                    ddate = datetime.strptime(date_str, '%d/%m/%Y %H:%M:%S')
+                    planned = datetime.strptime(date_str, '%d/%m/%Y %H:%M:%S')
                 except Exception:
-                    ddate = datetime.strptime(date_str, '%d/%m/%Y %H:%M')
+                    planned = datetime.strptime(date_str, '%d/%m/%Y %H:%M')
 
                 schedule.append(Duel(p1=player_1,
                                      p2=player_2,
-                                     duel_date=ddate))
+                                     planned=planned,
+                                     schedule_timestamp=timestamp))
 
             return schedule
 
@@ -89,14 +103,24 @@ class Group:
                 player_1 = self._find_player(row['player1'])
                 player_2 = self._find_player(row['player2'])
                 date_str = row['timestamp']
-                ddate = datetime.strptime(date_str, '%d/%m/%Y %H:%M:%S')
+                odate = datetime.strptime(date_str, '%d/%m/%Y %H:%M:%S')
                 score_1 = int(row['score1'])
                 score_2 = int(row['score2'])
                 played = not row.get('not played', False)
 
+                try:
+                    pduel = self._find_scheduled_duel(player_1, player_2)
+                    pdate = pduel.planned
+                    sdate = pduel.schedule_timestamp
+                except LookupError:
+                    pdate = odate
+                    sdate = odate
+
                 outcome.append(Duel(p1=player_1,
                                     p2=player_2,
-                                    duel_date=ddate,
+                                    planned=pdate,
+                                    schedule_timestamp=sdate,
+                                    outcome_timestamp=odate,
                                     p1_score=score_1,
                                     p2_score=score_2,
                                     played=True,
@@ -113,12 +137,13 @@ class Group:
         If query date is in the past, it will return already played duels.
         """
         if force_schedule or query_date >= date.today():
-            duels = self.schedule
+            all = self.schedule
+            duels = filter(lambda m: m.planned.date() == query_date, all)
         else:
-            duels = self.outcome
+            all = self.outcome
+            duels = filter(lambda m: m.outcome_timestamp.date() == query_date, all)
 
-        filtered = filter(lambda m: m.duel_date.date() == query_date, duels)
-        return sorted(list(filtered), key=lambda m: m.duel_date)
+        return sorted(list(duels), key=lambda m: m.planned)
 
     def wrong_outcome(self, query_date: date) -> list[Duel]:
         """Return duels with outcome that need to be checked."""

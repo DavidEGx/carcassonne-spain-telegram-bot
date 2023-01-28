@@ -17,7 +17,9 @@ class Duel:
     def __init__(self,
                  p1: Player,
                  p2: Player,
-                 duel_date: datetime,
+                 planned: datetime,
+                 schedule_timestamp: datetime,
+                 outcome_timestamp: Optional[datetime] = None,
                  p1_score: Optional[int] = None,
                  p2_score: Optional[int] = None,
                  played: bool = False,
@@ -28,7 +30,9 @@ class Duel:
         ----------
             p1 Player acting as host.
             p2 Player acting as visitor.
-            duel_date Approximate date of the duel.
+            planned Planned datetime for a duel
+            schedule_timestamp When the duel was scheduled
+            outcome_timestamp Datetime when results were submitted
             p1_score Score of player 1 (If the duel was played already)
             p1_score Score of player 2 (If the duel was played already)
             played: True if the duel was played
@@ -37,7 +41,9 @@ class Duel:
         """
         self.p1 = p1
         self.p2 = p2
-        self.duel_date = duel_date
+        self.planned = planned
+        self.schedule_timestamp = schedule_timestamp
+        self.outcome_timestamp = outcome_timestamp
         self.p1_score = p1_score
         self.p2_score = p2_score
         self.played = played
@@ -50,7 +56,7 @@ class Duel:
         if self._url:
             return self._url
 
-        ddate = self.duel_date
+        ddate = self.outcome_timestamp or self.planned
         base_url = config['bga']['urls']['outcome_link']
         start = int(time.mktime(ddate.date().timetuple()))
         end = int(time.mktime((ddate.date() + timedelta(days=1)).timetuple()))
@@ -59,15 +65,13 @@ class Duel:
 
     def html(self):
         """HTML representation of the game."""
-        p1_html = self.p1.html()
-        p2_html = self.p2.html()
-        url = self.url
-        time_str = self.duel_date.time().strftime("%H:%M")
-
         if self.p1_score is None:
+            p1_html = self.p1.html()
+            p2_html = self.p2.html()
+            time_str = self.planned.time().strftime("%H:%M")
             return f'{p1_html} - {p2_html}: {time_str}'
 
-        return (f'{self.p1.name} <a href="{url}">'
+        return (f'{self.p1.name} <a href="{self.url}">'
                 f'{self.p1_score} - {self.p2_score}'
                 f'</a> {self.p2.name}')
 
@@ -77,7 +81,7 @@ class Duel:
         p2_str = self.p2.name
 
         if self.p1_score is None:
-            time_str = self.duel_date.time().strftime("%H:%M")
+            time_str = self.planned.time().strftime("%H:%M")
             return f"{p1_str} - {p2_str}: {time_str}"
 
         return f"{p1_str} {self.p1_score} - {self.p2_score} {p2_str}"
@@ -86,8 +90,12 @@ class Duel:
         """Duel formatted properly."""
         p1_str = repr(self.p1)
         p2_str = repr(self.p2)
-        ddate = f"'{self.duel_date}'" if self.duel_date else 'None'
-        return (f"Duel({p1_str}, {p2_str}, {ddate}, "
+        pdate = self.planned
+        sdate = self.schedule_timestamp
+        odate = f"'{self.outcome_timestamp}'" \
+                if self.outcome_timestamp else 'None'
+
+        return (f"Duel({p1_str}, {p2_str}, {pdate}, {sdate}, {odate},"
                 f"{self.p1_score}, {self.p2_score})")
 
     def __eq__(self, other: object) -> bool:
@@ -99,4 +107,6 @@ class Duel:
                 self.p2 == other.p2 and
                 self.p1_score == other.p1_score and
                 self.p2_score == other.p2_score and
-                self.duel_date == other.duel_date)
+                self.planned == other.planned and
+                self.schedule_timestamp == other.schedule_timestamp and
+                self.outcome_timestamp == other.outcome_timestamp)

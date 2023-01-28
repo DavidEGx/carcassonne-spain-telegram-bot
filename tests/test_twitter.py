@@ -9,7 +9,7 @@ class TestTwitter(unittest.TestCase):
     """Test Twitter messages."""
 
     def test_schedule(self):
-        """Check I get the right messasge for scheduled duels."""
+        """Check I get the right message for scheduled duels."""
         twitter = Twitter(season=2)
 
         with self.subTest(i="Single Msg"):
@@ -51,7 +51,7 @@ class TestTwitter(unittest.TestCase):
             self.assertEqual(got, expected)
 
     def test_outcome(self):
-        """Check I get the right messasge for played duels."""
+        """Check I get the right message for played duels."""
         twitter = Twitter(season=2)
 
         with self.subTest(i="Single Msg"):

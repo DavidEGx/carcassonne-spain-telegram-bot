@@ -29,4 +29,4 @@ class Player:
         if not isinstance(other, self.__class__):
             return False
         return (self.id == other.id and
-                self.name == other.name)
+                self.name.lower() == other.name.lower())
