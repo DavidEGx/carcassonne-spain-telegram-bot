@@ -10,12 +10,22 @@ telegram:
     # Used by bin/telegram_control to notify tournament
     # managers of errors
     id: -12345678
+  header:
+    results: '<b>📡 Últimos resultados 📡</b>'
+    schedule: '<b><a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTQgViRubR7qSeJubBOYR335aVaLBdD9jpxkqqIb-KRC1u4iUt7rtCs4j_zY_zC8ycLKO95u98TFgVC/pubhtml">⏰ Duelos para hoy ⏰</a></b>'
 twitter:
   # Twitter credentails to tweet duels schedule and outcome
   api_key: twitter_api_key
   api_key_secret: twitter_api_secret
   access_token: twitter_api_access_token
   access_token_secret: twitter_access_secret
+  header:
+    results: '📡 Últimos resultados #LigaCarcassonneSpain 📡'
+    schedule: '⏰ Duelos para hoy #LigaCarcassonneSpain ⏰'
+
+google:
+  calendar_id: 80fd10e42324bd2c99210479c53bda4928d76d8f5f235b31eab7053762bcdd2c@group.calendar.google.com
+
 schedule:
   results: '07:00'
   schedule: '07:01'
@@ -32,10 +42,6 @@ bga:
     outcome_link: https://boardgamearena.com/gamestats?player={0}&opponent_id={1}&game_id=1&finished=1&start_date={2}&end_date={3}
     player_link: https://boardgamearena.com/player?id={0}
 
-header:
-  results: '📡 Últimos resultados 📡'
-  # schedule: '<a href="https://docs.google.com/spreadsheets/u/3/d/e/2PACX-1vQUfs_HUfPlUPAAHfFy42cURAj4NiEnd_TT-5e-TsMLA93FIckyxDk7uOGbNaRB-JB2VtBbQH94P_C3/pubhtml#">⏰ Duelos para hoy ⏰</a>'
-  schedule: '⏰ Duelos para hoy ⏰'
 
 league:
   - season: 2

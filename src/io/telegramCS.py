@@ -38,11 +38,11 @@ class Telegram(IoBase):
 
         # Add header
         if force_schedule or query_date >= date.today():
-            header = config['header']['schedule']
+            header = config['telegram']['header']['schedule']
         else:
-            header = config['header']['results']
+            header = config['telegram']['header']['results']
 
-        return [f"<b>{header}</b>{html_body}"]
+        return [f"{header}{html_body}"]
 
     def send(self, query_date: date, force_schedule: bool = False) -> None:
         """Send Telgram message with duels schedule/outcome for a date."""

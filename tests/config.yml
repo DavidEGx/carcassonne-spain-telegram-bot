@@ -2,6 +2,9 @@ telegram:
   token: telegram_t
   groups:
    - -666
+  header:
+    results: '<b>📡 Últimos resultados 📡</b>'
+    schedule: '<b><a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTQgViRubR7qSeJubBOYR335aVaLBdD9jpxkqqIb-KRC1u4iUt7rtCs4j_zY_zC8ycLKO95u98TFgVC/pubhtml">⏰ Duelos para hoy ⏰</a></b>'
 twitter:
   api_key: xxx
   api_key_secret: xxx
@@ -10,6 +13,9 @@ twitter:
 schedule:
   results: '07:00'
   schedule: '07:01'
+  header:
+    results: '📡 Últimos resultados #LigaCarcassonneSpain 📡'
+    schedule: '⏰ Duelos para hoy #LigaCarcassonneSpain ⏰'
 
 bga:
   user: someuser
@@ -22,10 +28,6 @@ bga:
     outcome: https://boardgamearena.com/gamestats/gamestats/getGames.html?player={0}&opponent_id={1}&game_id=1&finished=1&start_date={2}&end_date={3}&updateStats=0
     player_link: 'https://boardgamearena.com/player?id={0}'
     outcome_link: 'https://boardgamearena.com/gamestats?player={0}&opponent_id={1}&game_id=1&finished=1&start_date={2}&end_date={3}'
-
-header:
-  results: '📡 Últimos resultados 📡'
-  schedule: '⏰ Duelos para hoy ⏰'
 
 league:
   - season: 2

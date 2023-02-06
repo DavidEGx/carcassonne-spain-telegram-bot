@@ -67,9 +67,9 @@ class Twitter(IoBase):
 
         # Add header to first group
         if force_schedule or query_date >= date.today():
-            header = config['header']['schedule']
+            header = config['twitter']['header']['schedule']
         else:
-            header = config['header']['results']
+            header = config['twitter']['header']['results']
 
         group_texts[0] = header + "\n" + group_texts[0]
 
