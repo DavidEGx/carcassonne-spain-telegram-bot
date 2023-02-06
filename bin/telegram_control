@@ -32,11 +32,11 @@ async def main():
                         action='store_const',
                         const=True,
                         help='Do nothing in Telegram, just print message here')
-    parser.add_argument('--report',
-                        dest='report',
+    parser.add_argument('--days',
+                        dest='days',
                         type=int,
-                        default=1,
-                        help='Report mode, check number of days passed as parameter')
+                        default=7,
+                        help='Check number of days passed as parameter. Default 7.')
     parser.add_argument('--season',
                         dest='season',
                         type=int,
@@ -48,34 +48,98 @@ async def main():
     else:
         today = date.today()
 
-    current = today - timedelta(days=args.report - 1)
+    current = today - timedelta(days=args.days - 1)
     msg = ""
+
+    max_elo_win, max_score_diff, min_score_diff = (0, 0, 9999)
+    max_abbey, max_city, max_field, max_road = (0, 0, 0, 0)
+    elo_duel, landslide_duel, tight_duel = (None, None, None)
+    abbey_player, city_player, field_player, road_player = (None, None, None, None)
 
     while current <= today:
         day_before = current - timedelta(days=1)
 
         for group in League(season=args.season).groups:
-            duels = group.wrong_outcome(day_before)
-            for duel in duels:
-                msg += f"⚠️ Dubious duel outcome ({current}): {duel.html()}\n"
+            for duel in group.duels(day_before):
+                if duel.valid_outcome():
+                    landslide_score = duel.games_landslide_score
+                    elo_diff = abs(duel.games_elo_diff)
+
+                    if landslide_score > max_score_diff:
+                        max_score_diff = landslide_score
+                        landslide_duel = duel
+                    elif landslide_score < min_score_diff:
+                        min_score_diff = landslide_score
+                        tight_duel = duel
+
+                    if elo_diff > max_elo_win:
+                        max_elo_win = elo_diff
+                        elo_duel = duel
+
+                    if duel.p1_abbey_score > duel.p2_abbey_score > max_abbey:
+                        max_abbey = duel.p1_abbey_score
+                        abbey_player = duel.p1
+                    elif duel.p2_abbey_score > duel.p1_abbey_score > max_abbey:
+                        max_abbey = duel.p2_abbey_score
+                        abbey_player = duel.p2
+
+                    if duel.p1_field_score > duel.p2_field_score > max_field:
+                        max_field = duel.p1_field_score
+                        field_player = duel.p1
+                    elif duel.p2_field_score > duel.p1_field_score > max_field:
+                        max_field = duel.p2_field_score
+                        field_player = duel.p2
+
+                    if duel.p1_road_score > duel.p2_road_score > max_road:
+                        max_road = duel.p1_road_score
+                        road_player = duel.p1
+                    elif duel.p2_road_score > duel.p1_road_score > max_road:
+                        max_road = duel.p2_road_score
+                        road_player = duel.p2
+
+                else:
+                    msg += f"⚠️ Please check duel ({current}): {duel.html()}\n"
 
         current = current + timedelta(days=1)
 
-    if not msg:
-        quit()
+    summary_msg = (
+        f"🔪 <a href='{landslide_duel.url}'>Paliza de la semana</a>: "
+        f"{landslide_duel.winner.name} obtuvo {abs(landslide_duel.games_score_diff)}"
+        f" más puntos que su rival.\n\n"
+        f"😮 <a href='{elo_duel.url}'>Sorpresa de la semana</a>: "
+        f"{elo_duel.winner.name} consiguio la victoria contra todo pronóstico.\n\n"
+        f"⚖️  <a href='{tight_duel.url}'>Duelo más ajustado</a>: "
+        f"{tight_duel.winner.name} tuvo que luchar duro para ganar.\n\n\n"
+        f"⛪ {abbey_player.html()} fue mucho a misa: {max_abbey} puntos.\n\n"
+        f"🐑 {field_player.html()} trabajó duro la tierra: {max_field} puntos.\n\n"
+        f" 🛣️ {road_player.html()} está estudiando Ingeníeria de Caminos: {max_road} puntos.\n\n"
+    )
 
     if args.test:
         print(msg)
+        print(summary_msg)
         quit()
 
     token = config['telegram']['token']
     application = Application.builder().token(token).build()
     bot = application.bot
+
+    # Message with wrong Duels
     group_id = config['telegram']['control_group']['id']
-    await bot.send_message(chat_id=group_id,
-                           text=msg,
-                           parse_mode=tconstants.ParseMode.HTML,
-                           disable_web_page_preview=True)
+    if msg:
+        await bot.send_message(chat_id=group_id,
+                               text=msg,
+                               parse_mode=tconstants.ParseMode.HTML,
+                               disable_web_page_preview=True)
+
+    # Message with summary week
+    if summary_msg:
+        for group in config['telegram']['groups']:
+            await bot.send_message(chat_id=group['id'],
+                                   text=summary_msg,
+                                   message_thread_id=group.get('thread_id'),
+                                   parse_mode=tconstants.ParseMode.HTML,
+                                   disable_web_page_preview=True)
 
 if __name__ == '__main__':
     asyncio.run(main())

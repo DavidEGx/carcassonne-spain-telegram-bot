@@ -29,6 +29,7 @@ bga:
     login: https://en.boardgamearena.com/account/account/login.html
     csrf: https://boardgamearena.com/gamestats?player=84486751&game_id=1
     outcome: https://boardgamearena.com/gamestats/gamestats/getGames.html?player={0}&opponent_id={1}&game_id=1&finished=1&start_date={2}&end_date={3}&updateStats=0
+    game_stats: https://boardgamearena.com/table/table/tableinfos.html?id={0}
     outcome_link: https://boardgamearena.com/gamestats?player={0}&opponent_id={1}&game_id=1&finished=1&start_date={2}&end_date={3}
     player_link: https://boardgamearena.com/player?id={0}
 

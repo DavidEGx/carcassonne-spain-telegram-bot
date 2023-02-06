@@ -1,10 +1,14 @@
 """Module for handling connections to Board Game Arena."""
 import re
 import requests
+import time
 from cachetools.func import ttl_cache
 from functools import cache
-from src.cs.duel import Duel
 from src.settings import config, logger
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from src.cs.duel import Duel
 
 CACHE_TTL = 3600  # in seconds
 
@@ -46,10 +50,11 @@ class BGA:
         # Finally I can return a session that can be used
         return s
 
-    def check_duel(self, duel: Duel) -> bool:
-        """Check submitted outcome for single duel matches reality."""
+    def fetch_tables(self, duel: 'Duel') -> list[dict[str, str]]:
+        """Fetch BGA game tables for a duel."""
         if duel.outcome_timestamp is None:
-            raise Exception("Duel not played, something went wrong")
+            logger.error(f"Duel not played, something went wrong. {duel}")
+            return []
 
         base_date = round(duel.outcome_timestamp.timestamp())
         start_date = str(base_date - 24 * 1 * 3600)
@@ -66,17 +71,6 @@ class BGA:
         if len(tables) > 3:
             # Remove unranked games if there are more than 3 tables
             tables = [t for t in tables if t['unranked'] == '0']
-            if len(tables) > 3:
-                # Still more than 3 games, dunno which ones are the good ones
-                logger.warn(f"More than 3 games found for {duel}")
-                return False
-
-        if not duel.played_for_real:
-            # Someone marked the game as not played
-            return (len(tables) == 0 and (
-                        (duel.p1_score == 2 and duel.p2_score == 0) or
-                        (duel.p1_score == 0 and duel.p2_score == 2))
-                    )
 
         if len(tables) < 2:
             # Try older games, maybe game results were submitted late
@@ -88,31 +82,19 @@ class BGA:
             r = self.session.get(url)
             tables = r.json()['data']['tables']
 
-            if len(tables) < 2:
-                # Dunno where are the games
-                logger.warn(f"Less than 2 games found for {duel}")
-                return False
+        # Sleep to avoid hammering bga
+        time.sleep(config['bga']['interval'])
+        return tables
 
-        p1_real_score = 0
-        p2_real_score = 0
-        for table in tables:
-            p1, p2 = [x.lower() for x in table['player_names'].split(',')]
-            r1, r2 = [int(x) for x in table['scores'].split(',')]
+    def fetch_table_stats(self, table_id: int) -> list[dict[str, str]]:
+        """Fetch game stats."""
+        bga = config['bga']
+        url = bga['urls']['game_stats']
+        url = url.format(table_id)
 
-            if r1 == r2:
-                logger.warn(f"Tie, need to manually check {duel}")
-                return False
+        r = self.session.get(url)
+        stats = r.json()['data']['result']['stats']['player']
 
-            if p1 == duel.p1.name.lower() and r1 > r2:
-                p1_real_score += 1
-            elif p2 == duel.p2.name.lower() and r2 > r1:
-                p1_real_score += 1
-            else:
-                p2_real_score += 1
-
-        if duel.p1_score != p1_real_score or duel.p2_score != p2_real_score:
-            logger.warn((f"Wrong score for {duel}, "
-                         f"got: {p1_real_score} - {p2_real_score}"))
-            return False
-
-        return True
+        # Sleep to avoid hammering bga
+        time.sleep(config['bga']['interval'])
+        return stats
