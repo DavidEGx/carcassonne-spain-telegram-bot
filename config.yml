@@ -20,8 +20,8 @@ twitter:
   access_token: twitter_api_access_token
   access_token_secret: twitter_access_secret
   header:
-    results: '📡 Últimos resultados #LigaCarcassonneSpain 📡'
-    schedule: '⏰ Duelos para hoy #LigaCarcassonneSpain ⏰'
+    results: '📡 Últimos resultados #LigaCSonline 📡'
+    schedule: '⏰ Duelos para hoy #LigaCSonline ⏰'
 
 google:
   calendar_id: 80fd10e42324bd2c99210479c53bda4928d76d8f5f235b31eab7053762bcdd2c@group.calendar.google.com
