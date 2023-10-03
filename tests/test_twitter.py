@@ -14,7 +14,7 @@ class TestTwitter(unittest.TestCase):
 
         with self.subTest(i="Single Msg"):
             mydate = date.fromisoformat('2022-11-01')
-            expected = [("\n⏰ Duelos para hoy #LigaCarcassonneSpain ⏰\n\n"
+            expected = [("\n⏰ Duelos para hoy #LigaCSonline ⏰\n\n"
                          "𝗘́𝗹𝗶𝘁𝗲:\n"
                          "IQIUB - oscaridis: 22:00\n"
                          "LOKU_ELO - valle13: 22:00\n\n"
@@ -28,7 +28,7 @@ class TestTwitter(unittest.TestCase):
 
         with self.subTest(i="Split Msg"):
             mydate = date.fromisoformat('2022-11-15')
-            expected = [("\n⏰ Duelos para hoy #LigaCarcassonneSpain ⏰\n\n"
+            expected = [("\n⏰ Duelos para hoy #LigaCSonline ⏰\n\n"
                          "𝗘́𝗹𝗶𝘁𝗲:\n"
                          "gudul - ziamat: 20:00\n"
                          "MadCan - RaKaRoT: 20:30\n\n"
@@ -56,7 +56,7 @@ class TestTwitter(unittest.TestCase):
 
         with self.subTest(i="Single Msg"):
             mydate = date.fromisoformat('2022-11-01')
-            expected = [("\n📡 Últimos resultados #LigaCarcassonneSpain 📡\n\n"
+            expected = [("\n📡 Últimos resultados #LigaCSonline 📡\n\n"
                          "𝗘́𝗹𝗶𝘁𝗲:\n"
                          "LOKU_ELO 2 - 0 valle13\n"
                          "IQIUB 1 - 2 oscaridis\n\n"
@@ -70,7 +70,7 @@ class TestTwitter(unittest.TestCase):
 
         with self.subTest(i="Split Msg"):
             mydate = date.fromisoformat('2022-11-15')
-            expected = [("\n📡 Últimos resultados #LigaCarcassonneSpain 📡\n\n"
+            expected = [("\n📡 Últimos resultados #LigaCSonline 📡\n\n"
                          "𝗘́𝗹𝗶𝘁𝗲:\n"
                          "gudul 2 - 1 ziamat\n"
                          "MadCan 2 - 0 RaKaRoT\n\n"
