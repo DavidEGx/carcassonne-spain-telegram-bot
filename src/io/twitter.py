@@ -1,6 +1,7 @@
 """Module for Carcassonne Spain Twitter class."""
 from datetime import date
 from typing import Optional
+
 import tweepy
 
 from src.cs.league import League
@@ -8,7 +9,6 @@ from src.io.io_base import IoBase
 from src.settings import config, logger
 
 
-# pyright: strict
 class Twitter(IoBase):
     """Encapsulate all Carcassonne Spain league tweeter communication."""
 
@@ -18,6 +18,7 @@ class Twitter(IoBase):
         self.max_size = 280  # Tweet size
 
     def _make_bold(self, text: str) -> str:
+        # fmt: off
         regular = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
                    'm', 'n', 'ñ', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
                    'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
@@ -30,15 +31,14 @@ class Twitter(IoBase):
                 '𝗝', '𝗞', '𝗟', '𝗠', '𝗡', '𝗢', '𝗣', '𝗞', '𝗥', '𝗦', '𝗧', '𝗨',
                 '𝗩', '𝗪', '𝗫', '𝗬', '𝗭', '𝗮́', '𝗲́', '𝗶́', '𝗼́', '𝘂́', '𝗔́', '𝗘́',
                 '𝗜́', '𝗢́', '𝗨́', '𝘂̈', '𝗨̈']
+        # fmt: on
 
         for c_original, c_new in zip(regular, bold):
             text = text.replace(c_original, c_new)
 
         return text
 
-    def create_msg(self,
-                   query_date: date,
-                   force_schedule: bool = False) -> list[str]:
+    def create_msg(self, query_date: date, force_schedule: bool = False) -> list[str]:
         """Create a message containing all the duels for a give date.
 
         Parameters
@@ -67,9 +67,9 @@ class Twitter(IoBase):
 
         # Add header to first group
         if force_schedule or query_date >= date.today():
-            header = config['twitter']['header']['schedule']
+            header = config["twitter"]["header"]["schedule"]
         else:
-            header = config['twitter']['header']['results']
+            header = config["twitter"]["header"]["results"]
 
         group_texts[0] = header + "\n" + group_texts[0]
 
@@ -84,16 +84,14 @@ class Twitter(IoBase):
                 continue
 
             updated_msg = messages[-1] + f"\n{txt}"
-            if len(updated_msg.encode('utf-8')) < self.max_size:
+            if len(updated_msg.encode("utf-8")) < self.max_size:
                 messages[-1] = updated_msg
             else:
                 messages.append(txt)
 
         return messages
 
-    def send(self,
-             query_date: date,
-             force_schedule: bool = False):
+    def send(self, query_date: date, force_schedule: bool = False):
         """Create a Tweet.
 
         The tweet (or tweets) created will contain the duels
@@ -109,24 +107,23 @@ class Twitter(IoBase):
                            For testing purposes mainly.
         """
         client = tweepy.Client(
-                consumer_key=config['twitter']['api_key'],
-                consumer_secret=config['twitter']['api_key_secret'],
-                access_token=config['twitter']['access_token'],
-                access_token_secret=config['twitter']['access_token_secret']
-               )
+            consumer_key=config["twitter"]["api_key"],
+            consumer_secret=config["twitter"]["api_key_secret"],
+            access_token=config["twitter"]["access_token"],
+            access_token_secret=config["twitter"]["access_token_secret"],
+        )
 
-        logger.info(f"Creating tweet for {query_date}")
+        logger.info("Creating tweet for %s", query_date)
         msgs = self.create_msg(query_date, force_schedule)
         if not msgs:
             return
 
         first_msg = msgs.pop(0)
         response = client.create_tweet(text=first_msg)
-        last_tweet_id = response.data['id']
-        logger.info(f"Created tweet {last_tweet_id}")
+        last_tweet_id: int = response.data["id"]
+        logger.info("Created tweet %s", last_tweet_id)
 
         for msg in msgs:
-            response = client.create_tweet(text=msg,
-                                           in_reply_to_tweet_id=last_tweet_id)
-            last_tweet_id = response.data['id']
-            logger.info(f"Created tweet {last_tweet_id}")
+            response = client.create_tweet(text=msg, in_reply_to_tweet_id=last_tweet_id)
+            last_tweet_id = response.data["id"]
+            logger.info("Created tweet %s", last_tweet_id)

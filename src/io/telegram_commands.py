@@ -5,11 +5,12 @@
 """Module implementing commands supported by the Telegram BOT."""
 
 from datetime import date, datetime, timedelta
-from telegram import Update
-from telegram.ext import ContextTypes
 from typing import Optional
 
-from src.io.telegramCS import Telegram
+from telegram import Update
+from telegram.ext import ContextTypes
+
+from src.io.telegram_cs import Telegram
 
 
 def _parse_date(update: Update) -> Optional[date]:
@@ -20,21 +21,27 @@ def _parse_date(update: Update) -> Optional[date]:
         try:
             # Try YYYY-mm-dd format
             return date.fromisoformat(str_date)
-        except Exception:
+        except ValueError:
             # Try dd/mm/YY format
             try:
                 return datetime.strptime(str_date, "%d/%m/%y").date()
-            except Exception:
+            except ValueError:
                 update.message.reply_text(f"Wrong date format {str_date}")
 
     return None
 
 
+# pylint: disable=redefined-builtin
 async def help(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     """Describe the set of available commands."""
-    await update.message.reply_text("""Available Commands :-
+    await update.message.reply_text(
+        """Available Commands :-
     /schedule [dd/mm/yy] - Get duels for a given date (today by default)
-    /results [dd/mm/yy] - Get duels outcome for a given date (yesterday by default)""")
+    /results [dd/mm/yy] - Get duels outcome for a given date (yesterday by default)"""
+    )
+
+
+# pylint: enable=redefined-builtin
 
 
 async def schedule(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:

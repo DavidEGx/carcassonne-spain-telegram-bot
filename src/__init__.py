@@ -1,0 +1,1 @@
+"""Carcassonne Spain Telegram Bot."""

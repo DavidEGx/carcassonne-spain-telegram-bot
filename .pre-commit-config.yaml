@@ -1,0 +1,50 @@
+repos:
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        name: 1. Reorder imports (isort)
+  # Using this mirror lets us use mypyc-compiled black, which is about 2x faster
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 23.11.0
+    hooks:
+      - id: black
+        name: 2. Format code (black)
+        # It is recommended to specify the latest version of Python
+        # supported by your project here, or alternatively use
+        # pre-commit's default_language_version, see
+        # https://pre-commit.com/#top_level-default_language_version
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.1.0
+    hooks:
+      - id: flake8
+        name: 3. Style check (flake8)
+        additional_dependencies:
+          - flake8-docstrings>=1.7.0
+  - repo: local
+    hooks:
+      - id: pylint
+        name: 4. Additional style check (pylint)
+        entry: pylint
+        language: system
+        types: [python]
+        args:
+          [
+            "--rcfile",
+            "setup.cfg",
+            "-rn", # Only display messages
+            "-sn", # Don't display the score
+          ]
+  - repo: https://github.com/RobertCraigie/pyright-python
+    rev: v1.1.335
+    hooks:
+    - id: pyright
+      name: 5. Check typing (pyright)
+  - repo: local
+    hooks:
+      - id: unittests
+        name: 6. Run unit tests
+        entry: python -m unittest
+        language: system
+        pass_filenames: false
+        args: ["discover", "-s", "tests"]

@@ -13,34 +13,42 @@ specified in config.yml.
 
 import argparse
 import asyncio
+import sys
 from datetime import date, timedelta
-from src.settings import config
-from src.cs.league import League
+
 from telegram import constants as tconstants
 from telegram.ext import Application
 
+from src.cs.league import League
+from src.settings import config
 
-# pyright: strict
+
 async def main():
     """Check yesterday duel outcome is correct and notify if needed."""
-    parser = argparse.ArgumentParser(description='Telegram Control Bot')
-    parser.add_argument('--today',
-                        dest='today',
-                        help='Pretends today is a different day')
-    parser.add_argument('--test',
-                        dest='test',
-                        action='store_const',
-                        const=True,
-                        help='Do nothing in Telegram, just print message here')
-    parser.add_argument('--report',
-                        dest='report',
-                        type=int,
-                        default=1,
-                        help='Report mode, check number of days passed as parameter')
-    parser.add_argument('--season',
-                        dest='season',
-                        type=int,
-                        help='Season, last season is used by default')
+    parser = argparse.ArgumentParser(description="Telegram Control Bot")
+    parser.add_argument(
+        "--today", dest="today", help="Pretends today is a different day"
+    )
+    parser.add_argument(
+        "--test",
+        dest="test",
+        action="store_const",
+        const=True,
+        help="Do nothing in Telegram, just print message here",
+    )
+    parser.add_argument(
+        "--report",
+        dest="report",
+        type=int,
+        default=1,
+        help="Report mode, check number of days passed as parameter",
+    )
+    parser.add_argument(
+        "--season",
+        dest="season",
+        type=int,
+        help="Season, last season is used by default",
+    )
 
     args = parser.parse_args()
     if args.today:
@@ -62,22 +70,25 @@ async def main():
         current = current + timedelta(days=1)
 
     if not msg:
-        quit()
+        sys.exit(0)
 
     if args.test:
         print(msg)
-        quit()
+        sys.exit(0)
 
-    token = config['telegram']['token']
+    token = config["telegram"]["token"]
     application = Application.builder().token(token).build()
     bot = application.bot
-    group_id = config['telegram']['control_group']['id']
-    await bot.send_message(chat_id=group_id,
-                           text=msg,
-                           parse_mode=tconstants.ParseMode.HTML,
-                           disable_web_page_preview=True)
+    group_id = config["telegram"]["control_group"]["id"]
+    await bot.send_message(
+        chat_id=group_id,
+        text=msg,
+        parse_mode=tconstants.ParseMode.HTML,
+        disable_web_page_preview=True,
+    )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     asyncio.run(main())
 else:
     raise RuntimeError("Don't know what to do")

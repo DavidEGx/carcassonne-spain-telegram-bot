@@ -25,19 +25,20 @@ Development using docker
 
 There is a Dockerfile inside dev/ that install vim with
 some plugins and libraries for development:
-    1. $ docker build -t carcassonnedev --file dev/Dockerfile .
+    1. $ docker build -t carcassonnedev --target dev .
     2. $ docker run -it --volume $(pwd):/app carcassonnedev
     3. $ vim bin/bot_telegram # or whatever
 
 ------------------------------------------------------------
 """
 import argparse
+import sys
 from datetime import date, datetime, time, timedelta
-from telegram import Update
-from telegram.ext import Application, ContextTypes, CommandHandler, MessageHandler
 
-from src.io.telegramCS import Telegram
+from telegram.ext import Application, CommandHandler, ContextTypes
+
 from src.io import telegram_commands as commands
+from src.io.telegram_cs import Telegram
 from src.settings import config
 
 
@@ -47,26 +48,26 @@ def main():
     * Bind events so bot monitors when it is added to a group.
     * Create jobs so bot periodically sends messages.
     """
-    global today
-
-    parser = argparse.ArgumentParser(description='Telegram Bot')
-    parser.add_argument('--today',
-                        dest='today',
-                        help='Pretends today is a different day')
-    parser.add_argument('--now',
-                        dest='now',
-                        action='store_const',
-                        const=True,
-                        help='Sends messages now')
-    parser.add_argument('--test',
-                        dest='test',
-                        action='store_const',
-                        const=True,
-                        help='Do nothing in Telegram, just print message here')
-    parser.add_argument('--season',
-                        dest='season',
-                        type=int,
-                        help='Season, last season is used by default')
+    parser = argparse.ArgumentParser(description="Telegram Bot")
+    parser.add_argument(
+        "--today", dest="today", help="Pretends today is a different day"
+    )
+    parser.add_argument(
+        "--now", dest="now", action="store_const", const=True, help="Sends messages now"
+    )
+    parser.add_argument(
+        "--test",
+        dest="test",
+        action="store_const",
+        const=True,
+        help="Do nothing in Telegram, just print message here",
+    )
+    parser.add_argument(
+        "--season",
+        dest="season",
+        type=int,
+        help="Season, last season is used by default",
+    )
 
     args = parser.parse_args()
     if args.today:
@@ -82,19 +83,19 @@ def main():
         time_outcome = next_minute
         time_schedule = next_minute
     else:
-        time_outcome = time.fromisoformat(config['schedule']['results'])
-        time_schedule = time.fromisoformat(config['schedule']['schedule'])
+        time_outcome = time.fromisoformat(config["schedule"]["results"])
+        time_schedule = time.fromisoformat(config["schedule"]["schedule"])
 
     if args.test:
         telegram.test(today, today)
-        quit()
+        sys.exit(0)
 
-    token = config['telegram']['token']
+    token = config["telegram"]["token"]
     application = Application.builder().token(token).build()
 
-    application.add_handler(CommandHandler('help', commands.help))
-    application.add_handler(CommandHandler('schedule', commands.schedule))
-    application.add_handler(CommandHandler('results', commands.results))
+    application.add_handler(CommandHandler("help", commands.help))
+    application.add_handler(CommandHandler("schedule", commands.schedule))
+    application.add_handler(CommandHandler("results", commands.results))
 
     async def _send_outcome(context: ContextTypes.DEFAULT_TYPE):
         await telegram.send_async(context.bot, yesterday)
@@ -108,7 +109,7 @@ def main():
     application.run_polling()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 else:
     raise RuntimeError("Don't know what to do")

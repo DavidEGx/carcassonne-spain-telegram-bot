@@ -1,3 +1,5 @@
+timezone: Europe/Madrid
+
 telegram:
   # Telegram token to send duels schedule and outcome
   token: put_telegram_toke_here

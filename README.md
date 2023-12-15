@@ -21,6 +21,8 @@ You need to go to https://developer.twitter.com , get your tokens and put them i
 ### Dependencies
 
 ```bash
+$ python -m venv venv
+$ source venv/bin/activate
 $ pip install -r requirements.txt
 ```
 
@@ -72,12 +74,18 @@ $ bin/twitter_bot --today 2022-11-01 --test
 
 Code simply retrieves some csv files, generate a message and publish it in Telegram/Twitter. All the csv reading and parsing is done under [src/cs/](src/cs/). Telegram/Twitter stuff is inside [src/io/](src/io/).
 
-Before submitting code, check everything is all right by running:
+After cloning the repository you should set up `pre-commit`:
 
 ```bash
-$ python -m unittest
-$ pylint --errors-only $(git ls-files '*.py')
+$ python3 -m venv venv
+$ source env/bin/activate
+$ pip install -r dev/requirements.txt
+$ pip install -r requirements.txt
+$ pre-commit install
 ```
+
+Then update, test and commit. `pre-commit` will check code quality and format using `black`, `pyright`, `flake8` and `pylint`. It will also run unit tests.
+
 
 ## 📜 License
 
