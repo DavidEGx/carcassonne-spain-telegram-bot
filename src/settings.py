@@ -6,20 +6,15 @@
 
 import logging
 import os
+
 import yaml
 
-CONFIG_FILE = os.environ.get('CS_CONFIG_FILE', 'config.yml')
+CONFIG_FILE = os.environ.get("CS_CONFIG_FILE", "config.yml")
 
-with open(CONFIG_FILE, 'r') as f:
+with open(CONFIG_FILE, "r", encoding="utf8") as f:
     config = yaml.safe_load(f)
 
 logging.basicConfig(
-   level=logging.DEBUG,
-   format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger()
-
-
-def update():
-    """Update config file."""
-    with open(CONFIG_FILE, 'w') as f:
-        yaml.dump(config, f, default_flow_style=False)

@@ -1,30 +1,40 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-only
 # Copyright (C) 2023 David Escribano <davidegx@gmail.com>
+
+"""Google Calendar bot for Carcassonne Spain League."""
 import argparse
 from datetime import date, timedelta
+
 from src.io.google_calendar import GCalendar
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Google Calendar Bot')
-    parser.add_argument('--today',
-                        dest='today',
-                        help='Pretends today is a different day')
-    parser.add_argument('--days',
-                        dest='days',
-                        type=int,
-                        default=1,
-                        help='Number of days to add to the calendar')
-    parser.add_argument('--test',
-                        dest='test',
-                        action='store_const',
-                        const=True,
-                        help='Do not tweet, just print message here')
-    parser.add_argument('--season',
-                        dest='season',
-                        type=int,
-                        help='Season, last season is used by default')
+    """Run the Google Calendar bot."""
+    parser = argparse.ArgumentParser(description="Google Calendar Bot")
+    parser.add_argument(
+        "--today", dest="today", help="Pretends today is a different day"
+    )
+    parser.add_argument(
+        "--days",
+        dest="days",
+        type=int,
+        default=1,
+        help="Number of days to add to the calendar",
+    )
+    parser.add_argument(
+        "--test",
+        dest="test",
+        action="store_const",
+        const=True,
+        help="Do not tweet, just print message here",
+    )
+    parser.add_argument(
+        "--season",
+        dest="season",
+        type=int,
+        help="Season, last season is used by default",
+    )
 
     args = parser.parse_args()
     if args.today:
@@ -44,7 +54,7 @@ def main():
         current = current + timedelta(days=1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 else:
     raise RuntimeError("Don't know what to do")

@@ -4,25 +4,26 @@ from datetime import date, timedelta
 from typing import Any
 
 
-# pyright: strict
 class IoBase(ABC):
     """Base IO class."""
 
     @abstractmethod
-    def create_msg(self,
-                   query_date: date,
-                   force_schedule: bool = False
-                   ) -> list[str] | list[dict[str, Any]]:
+    def create_msg(
+        self, query_date: date, force_schedule: bool = False
+    ) -> list[str] | list[dict[str, Any]]:
         """Return list of messages formatted appropiately."""
 
     @abstractmethod
-    def send(self,
-             query_date: date,
-             force_schedule: bool = False):
+    def send(self, query_date: date, force_schedule: bool = False):
         """Post message."""
 
-    def test(self, start: date | str, end: date | str,
-             do_print: bool = True, do_send: bool = False):
+    def test(
+        self,
+        start: date | str,
+        end: date | str,
+        do_print: bool = True,
+        do_send: bool = False,
+    ):
         """Test funtion to create/simulate all tweets between two dates.
 
         Parameters:

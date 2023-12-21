@@ -1,19 +1,20 @@
 """Module for Carcassonne Spain Group class."""
 import csv
 import time
-from datetime import date, datetime
+from datetime import date
 from urllib import request
+
 from cachetools.func import ttl_cache
 
 from src.bga import BGA
-from src.cs.player import Player
+from src.cs.date import utc_datetime
 from src.cs.duel import Duel
+from src.cs.player import Player
 from src.settings import config, logger
 
 CACHE_TTL = 3600  # in seconds
 
 
-# pyright: strict
 class Group:
     """Represent a group.
 
@@ -31,19 +32,16 @@ class Group:
     @property
     def gcalendar_color(self) -> int:
         """Return Google Calendar color Id."""
-        return int(self.config.get('gcalendar_color', "8"))
+        return int(self.config.get("gcalendar_color", "8"))
 
     @property
     @ttl_cache(ttl=CACHE_TTL)
     def players(self) -> list[Player]:
         """List of players within the group."""
-        logger.info(f"Fetching players for {self} group")
+        logger.info("Fetching players for %s group", self)
 
-        url = self.config['players']
-        with request.urlopen(url) as resp:
-            lines = [line.decode('utf-8') for line in resp.readlines()]
-            return [Player(int(row['id']), row['name'])
-                    for row in csv.DictReader(lines)]
+        url = self.config["players"]
+        return [Player(int(row["id"]), row["name"]) for row in self._read_csv(url)]
 
     def _find_player(self, name: str) -> Player:
         """Find a player given its name."""
@@ -64,84 +62,82 @@ class Group:
     @ttl_cache(ttl=CACHE_TTL)
     def schedule(self) -> list[Duel]:
         """Duels scheduled for the group."""
-        logger.info(f"Fetching schedule for {self} group")
+        logger.info("Fetching schedule for %s group", self)
 
         schedule: list[Duel] = []
-        url = self.config['schedule']
-        with request.urlopen(url) as resp:
-            lines = [line.decode('utf-8') for line in resp.readlines()]
-            for row in csv.DictReader(lines):
-                player_1 = self._find_player(row['player1'])
-                player_2 = self._find_player(row['player2'])
-                timestamp = datetime.strptime(row["timestamp"], '%d/%m/%Y %H:%M:%S')
+        url = self.config["schedule"]
+        for row in self._read_csv(url):
+            player_1 = self._find_player(row["player1"])
+            player_2 = self._find_player(row["player2"])
+            timestamp = utc_datetime(row["timestamp"])
+            planned = utc_datetime(f'{row["date"]} {row["time"]}')
 
-                date_str = f'{row["date"]} {row["time"]}'
-                try:
-                    planned = datetime.strptime(date_str, '%d/%m/%Y %H:%M:%S')
-                except Exception:
-                    planned = datetime.strptime(date_str, '%d/%m/%Y %H:%M')
+            schedule.append(
+                Duel(
+                    p1=player_1,
+                    p2=player_2,
+                    planned=planned,
+                    schedule_timestamp=timestamp,
+                )
+            )
 
-                schedule.append(Duel(p1=player_1,
-                                     p2=player_2,
-                                     planned=planned,
-                                     schedule_timestamp=timestamp))
-
-            return schedule
+        return schedule
 
     @property
     @ttl_cache(ttl=CACHE_TTL)
     def outcome(self) -> list[Duel]:
         """Duels already played within group."""
-        logger.info(f"Fetching outcome for {self} group")
+        logger.info("Fetching outcome for %s group", self)
 
         outcome: list[Duel] = []
-        url = self.config['results']
-        with request.urlopen(url) as resp:
-            lines = [line.decode('utf-8') for line in resp.readlines()]
+        url = self.config["results"]
 
-            for row in csv.DictReader(lines):
-                player_1 = self._find_player(row['player1'])
-                player_2 = self._find_player(row['player2'])
-                date_str = row['timestamp']
-                odate = datetime.strptime(date_str, '%d/%m/%Y %H:%M:%S')
-                score_1 = int(row['score1'])
-                score_2 = int(row['score2'])
-                played = not row.get('not played', False)
+        for row in self._read_csv(url):
+            player_1 = self._find_player(row["player1"])
+            player_2 = self._find_player(row["player2"])
+            odate = utc_datetime(row["timestamp"])
+            played = not row.get("not played", False)
 
-                try:
-                    pduel = self._find_scheduled_duel(player_1, player_2)
-                    pdate = pduel.planned
-                    sdate = pduel.schedule_timestamp
-                except LookupError:
-                    pdate = odate
-                    sdate = odate
+            try:
+                pduel = self._find_scheduled_duel(player_1, player_2)
+                pdate = pduel.planned
+                sdate = pduel.schedule_timestamp
+            except LookupError:
+                pdate = odate
+                sdate = odate
 
-                outcome.append(Duel(p1=player_1,
-                                    p2=player_2,
-                                    planned=pdate,
-                                    schedule_timestamp=sdate,
-                                    outcome_timestamp=odate,
-                                    p1_score=score_1,
-                                    p2_score=score_2,
-                                    played=True,
-                                    played_for_real=played))
+            outcome.append(
+                Duel(
+                    p1=player_1,
+                    p2=player_2,
+                    planned=pdate,
+                    schedule_timestamp=sdate,
+                    outcome_timestamp=odate,
+                    p1_score=int(row["score1"]),
+                    p2_score=int(row["score2"]),
+                    played=True,
+                    played_for_real=played,
+                )
+            )
 
-            return outcome
+        return outcome
 
-    def duels(self,
-              query_date: date,
-              force_schedule: bool = False) -> list[Duel]:
+    def duels(self, query_date: date, force_schedule: bool = False) -> list[Duel]:
         """Return ordered duels for a given date.
 
         If query date is in the future, it will return scheduled duels.
         If query date is in the past, it will return already played duels.
         """
         if force_schedule or query_date >= date.today():
-            all = self.schedule
-            duels = filter(lambda m: m.planned.date() == query_date, all)
+            all_duels = self.schedule
+            duels = filter(lambda m: m.planned.date() == query_date, all_duels)
         else:
-            all = self.outcome
-            duels = filter(lambda m: m.outcome_timestamp.date() == query_date, all)
+            all_duels = self.outcome
+            duels = filter(
+                lambda m: m.outcome_timestamp
+                and m.outcome_timestamp.date() == query_date,
+                all_duels,
+            )
 
         return sorted(list(duels), key=lambda m: m.planned)
 
@@ -152,10 +148,23 @@ class Group:
         for duel in self.duels(query_date):
             if not bga.check_duel(duel):
                 wrong_duels.append(duel)
-            time.sleep(config['bga']['interval'])
+            time.sleep(config["bga"]["interval"])
 
         return wrong_duels
 
     def __str__(self):
         """Name of the group."""
         return self.name
+
+    def _read_csv(self, url: str) -> list[dict[str, str]]:
+        """Fetch URL and return CSV object."""
+        result: list[dict[str, str]] = []
+
+        with request.urlopen(url) as resp:
+            lines = [line.decode("utf-8") for line in resp.readlines()]
+            csv_reader = csv.DictReader(lines)
+
+            for row in csv_reader:
+                result.append(row)
+
+        return result

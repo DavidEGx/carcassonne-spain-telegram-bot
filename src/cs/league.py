@@ -6,7 +6,6 @@ from src.cs.group import Group
 from src.settings import config
 
 
-# pyright: strict
 @cache
 class League:
     """Represent Carcassonne Spain League tournament.
@@ -23,15 +22,16 @@ class League:
         if season:
             self.season = season
         else:
-            self.season = max([int(cnf['season']) for cnf in config['league']])
+            self.season = max(int(cnf["season"]) for cnf in config["league"])
 
         self._groups: list[Group] = []
 
     @property
     def groups(self) -> list[Group]:
         """List of groups within the League."""
-        cnf_groups = [cnf['groups'] for cnf in config['league']
-                      if cnf['season'] == self.season]
+        cnf_groups = [
+            cnf["groups"] for cnf in config["league"] if cnf["season"] == self.season
+        ]
         if cnf_groups:
             cnf_groups = cnf_groups[0]
         else:
@@ -39,10 +39,9 @@ class League:
 
         if not self._groups:
             group_names = sorted(
-                            cnf_groups,
-                            key=lambda group: cnf_groups[group]['order'])
-            self._groups = [Group(name, cnf_groups[name])
-                            for name in group_names]
+                cnf_groups, key=lambda group: cnf_groups[group]["order"]
+            )
+            self._groups = [Group(name, cnf_groups[name]) for name in group_names]
 
         return self._groups
 

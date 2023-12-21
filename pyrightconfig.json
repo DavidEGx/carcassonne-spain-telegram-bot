@@ -1,0 +1,8 @@
+{
+    "include": [ "src/" ],
+    "exclude": [ "src/io/*" ],
+    "strict": [ "app.py", "src/" ],
+    "venvPath": ".",
+    "venv": "venv"
+}
+

@@ -2,8 +2,8 @@ cachetools
 google-api-python-client
 google-auth-httplib2
 google-auth-oauthlib
-python-telegram-bot[job-queue]==20.0
+python-telegram-bot[job-queue]==20.7
 PyYAML
 requests_oauthlib
 typing_extensions
-tweepy==4.12.1
+tweepy==4.14.0

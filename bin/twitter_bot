@@ -40,19 +40,23 @@ from src.io.twitter import Twitter
 
 def main():
     """Create tweet with yesterday results and today schedule."""
-    parser = argparse.ArgumentParser(description='Tweeter Bot')
-    parser.add_argument('--today',
-                        dest='today',
-                        help='Pretends today is a different day')
-    parser.add_argument('--test',
-                        dest='test',
-                        action='store_const',
-                        const=True,
-                        help='Do not tweet, just print message here')
-    parser.add_argument('--season',
-                        dest='season',
-                        type=int,
-                        help='Season, last season is used by default')
+    parser = argparse.ArgumentParser(description="Tweeter Bot")
+    parser.add_argument(
+        "--today", dest="today", help="Pretends today is a different day"
+    )
+    parser.add_argument(
+        "--test",
+        dest="test",
+        action="store_const",
+        const=True,
+        help="Do not tweet, just print message here",
+    )
+    parser.add_argument(
+        "--season",
+        dest="season",
+        type=int,
+        help="Season, last season is used by default",
+    )
 
     args = parser.parse_args()
     if args.today:
@@ -65,11 +69,11 @@ def main():
     if args.test:
         twitter.test(today, today)
     else:
-        twitter.send(today - timedelta(1))        # Yesterday outcome
+        twitter.send(today - timedelta(1))  # Yesterday outcome
         twitter.send(today, force_schedule=True)  # Schedule for today
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 else:
     raise RuntimeError("Don't know what to do")

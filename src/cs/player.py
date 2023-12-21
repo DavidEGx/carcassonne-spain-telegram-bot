@@ -2,7 +2,6 @@
 from src.settings import config
 
 
-# pyright: strict
 class Player:
     """Represent a Carcassonne Spain league player."""
 
@@ -10,7 +9,7 @@ class Player:
         """Build a player."""
         self.id = player_id
         self.name = name
-        self.url = config['bga']['urls']['player_link'].format(player_id)
+        self.url = config["bga"]["urls"]["player_link"].format(player_id)
 
     def html(self):
         """Player name with link to BGA profile."""
@@ -28,5 +27,4 @@ class Player:
         """Hopefully sensible eq method for Player."""
         if not isinstance(other, self.__class__):
             return False
-        return (self.id == other.id and
-                self.name.lower() == other.name.lower())
+        return self.id == other.id and self.name.lower() == other.name.lower()
