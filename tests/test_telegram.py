@@ -1,4 +1,5 @@
 """Test Telegram messages."""
+
 import unittest
 from datetime import date
 from unittest.mock import patch
@@ -17,7 +18,7 @@ class TestTelegram(unittest.TestCase):
         telegram = Telegram(season=2)
         mydate = date.fromisoformat("2022-11-01")
         expected = [
-            '<b><a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTQgViRubR7qSeJubBOYR335aVaLBdD9jpxkqqIb-KRC1u4iUt7rtCs4j_zY_zC8ycLKO95u98TFgVC/pubhtml">⏰ Duelos para hoy ⏰</a></b>\n\n'
+            '<b><a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSYfpMLk0I7oiqVLUFf7FAtgyBHDGGun4GttRWWieIOA-I51dB2ta_dzqdCahAWBH3ASGBuFc970lkj/pubhtml">⏰ Duelos para hoy ⏰</a></b>\n\n'
             "<b>Élite</b>:\n"
             '<a href="https://boardgamearena.com/player?id=88929304">IQIUB</a> - <a href="https://boardgamearena.com/player?id=37324330">oscaridis</a>: 22:00\n'
             '<a href="https://boardgamearena.com/player?id=86256371">LOKU_ELO</a> - <a href="https://boardgamearena.com/player?id=88262806">valle13</a>: 22:00\n\n'

@@ -1,4 +1,5 @@
 """Date handling utils."""
+
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -15,7 +16,10 @@ def utc_datetime(date_str: str, timezone: str = TIMEZONE) -> datetime:
         try:
             my_date = datetime.strptime(date_str, "%d/%m/%Y %H:%M")
         except ValueError:
-            my_date = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+            try:
+                my_date = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+            except ValueError:
+                my_date = datetime.strptime(date_str, "%d/%m/%Y")
 
     my_date_with_tz = my_date.replace(tzinfo=ZoneInfo(timezone))
     my_date_in_utc = my_date_with_tz.astimezone(ZoneInfo("UTC"))

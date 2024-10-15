@@ -1,4 +1,5 @@
 """Module for handling connections to Board Game Arena."""
+
 import re
 from functools import cache
 

@@ -1,15 +1,21 @@
 """Module for Carcassonne Spain Player class."""
+
 from src.settings import config
 
 
 class Player:
     """Represent a Carcassonne Spain league player."""
 
-    def __init__(self, player_id: int, name: str):
+    def __init__(self, player_id: int, name: str, telegram: str = ""):
         """Build a player."""
         self.id = player_id
         self.name = name
         self.url = config["bga"]["urls"]["player_link"].format(player_id)
+        if telegram:
+            if telegram.startswith("@"):
+                self.telegram = telegram
+            else:
+                self.telegram = f"@${telegram}"
 
     def html(self):
         """Player name with link to BGA profile."""

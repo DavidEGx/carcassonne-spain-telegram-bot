@@ -14,7 +14,7 @@ telegram:
     id: -12345678
   header:
     results: '<b>📡 Últimos resultados 📡</b>'
-    schedule: '<b><a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTQgViRubR7qSeJubBOYR335aVaLBdD9jpxkqqIb-KRC1u4iUt7rtCs4j_zY_zC8ycLKO95u98TFgVC/pubhtml">⏰ Duelos para hoy ⏰</a></b>'
+    schedule: '<b><a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vSYfpMLk0I7oiqVLUFf7FAtgyBHDGGun4GttRWWieIOA-I51dB2ta_dzqdCahAWBH3ASGBuFc970lkj/pubhtml">⏰ Duelos para hoy ⏰</a></b>'
 twitter:
   # Twitter credentails to tweet duels schedule and outcome
   api_key: twitter_api_key
@@ -91,7 +91,7 @@ league:
         gcalendar_color: 3
         players: https://docs.google.com/spreadsheets/d/e/2PACX-1vSTCu8KzgqQEvK9r5ChHn42owKyzbYKf4Dpasg1Gzra8JTd7LvqnqJ4tSO_sEdtOT3fpayT1Qtem0dI/pub?output=csv&gid=481307165
         results: https://docs.google.com/spreadsheets/d/e/2PACX-1vSI-AcWpDBAgk_Q-u4q884fliIQvruzu-ar45b0UNCCbI43GJV9yzWJjggrmJmGVo0PtX2KdvvgAZGC/pub?output=csv&gid=1290077699
-        schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vQsrWnQbutIEgz7Zz9zcR4DYBJacHnWg5jch07FyBl3L3b8oWyNaIPhZ6uYB6PyooKJD1X3VHMJJr_H/pub?gid=828628157&single=true&output=csv 
+        schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vQsrWnQbutIEgz7Zz9zcR4DYBJacHnWg5jch07FyBl3L3b8oWyNaIPhZ6uYB6PyooKJD1X3VHMJJr_H/pub?gid=828628157&single=true&output=csv
       Rosa:
         order: 4
         gcalendar_color: 4
@@ -124,3 +124,34 @@ league:
         players: https://docs.google.com/spreadsheets/d/e/2PACX-1vQZkFhb83WaxFiiu3B4iOBhkEd9Cau8KzLswH1waFn6yI8aForqBqn3a4OKpq7nqrENxgByYvKAp5LE/pub?output=csv&gid=1464030688
         results: https://docs.google.com/spreadsheets/d/e/2PACX-1vRqP8j4QScNXuwlYML6cxbyE39n3SAhU2QlsvYI6OjfTE-4rhnTMeFgx4p18iK5AScRXn3QmQAO76qg/pub?output=csv&gid=413133258
         schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vS3BuJdSO86vuMg_izNVNdUH0YrnpiE_yMr-pt_ckTIuidyNTJmXDSd4fWceS6OKyDOzNtbO9B71lS7/pub?output=csv&gid=1174688863
+  - season: 5
+    groups:
+      Élite:
+        order: 1
+        gcalendar_color: 3
+        calendar: https://docs.google.com/spreadsheets/d/e/2PACX-1vQtTbaKico3yNu6lDtW626B-5-c3-9Imsm0ls0VGApBFjY_MHYPnIoj4zbZQtglXrIOXUCd83LXV6Ju/pub?output=csv&gid=0
+        players: https://docs.google.com/spreadsheets/d/e/2PACX-1vQ09ibKMkXUOExoFRbOr6i2Ua0yNAPPHpUi8HQ7tG82tysyNegQsSWFhqYxUR4jEP7aosl6hpmGYq7c/pub?output=csv&gid=363689283
+        results: https://docs.google.com/spreadsheets/d/e/2PACX-1vSOF8q4AW1IGnKQWHEf7ssSV3v81J1tqqkU-Al47ljhadeVK8kVG0nJICfR4xnOZ4X4v4zXQ_qQKWLK/pub?output=csv&gid=0
+        schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vTSobNZkDbM4klZmH8Iq_Vjaj0-IatcGvDXBkJc8I_cb_olfBXpuQb0xZ-aUgjc5LcggETJJaRIJFYU/pub?output=csv&gid=0
+      Segunda:
+        order: 2
+        gcalendar_color: 9
+        calendar: https://docs.google.com/spreadsheets/d/e/2PACX-1vQtTbaKico3yNu6lDtW626B-5-c3-9Imsm0ls0VGApBFjY_MHYPnIoj4zbZQtglXrIOXUCd83LXV6Ju/pub?output=csv&gid=1240082841
+        players: https://docs.google.com/spreadsheets/d/e/2PACX-1vQ09ibKMkXUOExoFRbOr6i2Ua0yNAPPHpUi8HQ7tG82tysyNegQsSWFhqYxUR4jEP7aosl6hpmGYq7c/pub?output=csv&gid=561683622
+        results: https://docs.google.com/spreadsheets/d/e/2PACX-1vSOF8q4AW1IGnKQWHEf7ssSV3v81J1tqqkU-Al47ljhadeVK8kVG0nJICfR4xnOZ4X4v4zXQ_qQKWLK/pub?output=csv&gid=1078056963
+        schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vTSobNZkDbM4klZmH8Iq_Vjaj0-IatcGvDXBkJc8I_cb_olfBXpuQb0xZ-aUgjc5LcggETJJaRIJFYU/pub?output=csv&gid=384769640
+      Naranja:
+        order: 6
+        gcalendar_color: 3
+        calendar: https://docs.google.com/spreadsheets/d/e/2PACX-1vQtTbaKico3yNu6lDtW626B-5-c3-9Imsm0ls0VGApBFjY_MHYPnIoj4zbZQtglXrIOXUCd83LXV6Ju/pub?output=csv&gid=608148712
+        players: https://docs.google.com/spreadsheets/d/e/2PACX-1vQ09ibKMkXUOExoFRbOr6i2Ua0yNAPPHpUi8HQ7tG82tysyNegQsSWFhqYxUR4jEP7aosl6hpmGYq7c/pub?output=csv&gid=481307165
+        results: https://docs.google.com/spreadsheets/d/e/2PACX-1vSOF8q4AW1IGnKQWHEf7ssSV3v81J1tqqkU-Al47ljhadeVK8kVG0nJICfR4xnOZ4X4v4zXQ_qQKWLK/pub?output=csv&gid=1290077699
+        schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vTSobNZkDbM4klZmH8Iq_Vjaj0-IatcGvDXBkJc8I_cb_olfBXpuQb0xZ-aUgjc5LcggETJJaRIJFYU/pub?output=csv&gid=828628157
+      Rosa:
+        order: 4
+        gcalendar_color: 4
+        calendar: https://docs.google.com/spreadsheets/d/e/2PACX-1vQtTbaKico3yNu6lDtW626B-5-c3-9Imsm0ls0VGApBFjY_MHYPnIoj4zbZQtglXrIOXUCd83LXV6Ju/pub?output=csv&gid=582378662
+        players: https://docs.google.com/spreadsheets/d/e/2PACX-1vQ09ibKMkXUOExoFRbOr6i2Ua0yNAPPHpUi8HQ7tG82tysyNegQsSWFhqYxUR4jEP7aosl6hpmGYq7c/pub?output=csv&gid=1464030688
+        results: https://docs.google.com/spreadsheets/d/e/2PACX-1vSOF8q4AW1IGnKQWHEf7ssSV3v81J1tqqkU-Al47ljhadeVK8kVG0nJICfR4xnOZ4X4v4zXQ_qQKWLK/pub?output=csv&gid=413133258
+        schedule: https://docs.google.com/spreadsheets/d/e/2PACX-1vTSobNZkDbM4klZmH8Iq_Vjaj0-IatcGvDXBkJc8I_cb_olfBXpuQb0xZ-aUgjc5LcggETJJaRIJFYU/pub?output=csv&gid=1174688863
+

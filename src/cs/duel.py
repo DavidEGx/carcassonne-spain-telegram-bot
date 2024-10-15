@@ -1,4 +1,5 @@
 """Module for Carcassonne Spain Duel class."""
+
 from datetime import datetime
 from typing import Optional
 
@@ -15,6 +16,7 @@ class Duel:
     """
 
     # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-positional-arguments
     def __init__(
         self,
         p1: Player,
@@ -53,6 +55,7 @@ class Duel:
         self.played_for_real = played_for_real
         self._url = None
 
+    # pylint: enable=too-many-positional-arguments
     # pylint: enable=too-many-arguments
 
     @property

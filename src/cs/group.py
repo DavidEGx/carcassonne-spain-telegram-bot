@@ -1,4 +1,5 @@
 """Module for Carcassonne Spain Group class."""
+
 import csv
 import time
 from datetime import date
@@ -7,6 +8,7 @@ from urllib import request
 from cachetools.func import ttl_cache
 
 from src.bga import BGA
+from src.cs.calendar import Calendar
 from src.cs.date import utc_datetime
 from src.cs.duel import Duel
 from src.cs.player import Player
@@ -36,12 +38,42 @@ class Group:
 
     @property
     @ttl_cache(ttl=CACHE_TTL)
+    def calendar(self) -> Calendar | None:
+        """Return calendar for this group."""
+        logger.info("Fetching calendar for %s group", self)
+        url = self.config.get("calendar", "")
+
+        if not url:
+            logger.info("No calendar found")
+            return None
+
+        calendar = Calendar()
+        for row in self._read_csv(url):
+            if not row["player1"] or not row["player2"]:
+                continue
+
+            start = utc_datetime(row["date"])
+            player_1 = self._find_player(row["player1"])
+            player_2 = self._find_player(row["player2"])
+            duel_round = int(row["round"])
+
+            calendar.add(
+                player_1=player_1, player_2=player_2, duel_round=duel_round, start=start
+            )
+
+        return calendar
+
+    @property
+    @ttl_cache(ttl=CACHE_TTL)
     def players(self) -> list[Player]:
         """List of players within the group."""
         logger.info("Fetching players for %s group", self)
 
         url = self.config["players"]
-        return [Player(int(row["id"]), row["name"]) for row in self._read_csv(url)]
+        return [
+            Player(int(row["id"]), row["name"], row.get("telegram", ""))
+            for row in self._read_csv(url)
+        ]
 
     def _find_player(self, name: str) -> Player:
         """Find a player given its name."""
@@ -121,6 +153,24 @@ class Group:
             )
 
         return outcome
+
+    def unschedule(self) -> list[list[Player]]:
+        """Return unscheduled duels."""
+        unscheduled: list[list[Player]] = []
+        if not self.calendar:
+            return unscheduled
+
+        duel_round = self.calendar.current_round - 1
+        duels_for_round = self.calendar.duels(duel_round)
+        for duel_info in duels_for_round:
+            player_1 = duel_info["player_1"]
+            player_2 = duel_info["player_2"]
+            try:
+                self._find_scheduled_duel(player_1, player_2)
+            except LookupError:
+                unscheduled.append([player_1, player_2])
+
+        return unscheduled
 
     def duels(self, query_date: date, force_schedule: bool = False) -> list[Duel]:
         """Return ordered duels for a given date.

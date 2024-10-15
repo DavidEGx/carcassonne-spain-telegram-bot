@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-only
-# Copyright (C) 2023 David Escribano <davidegx@gmail.com>
+# Copyright (C) 2024 David Escribano <davidegx@gmail.com>
 
 """Telegram Carcassone Spain *bontrol* Bot.
 
@@ -49,6 +49,13 @@ async def main():
         type=int,
         help="Season, last season is used by default",
     )
+    parser.add_argument(
+        "--notify_unscheduled",
+        dest="unscheduled",
+        action="store_const",
+        const=True,
+        help="If true, send notification for unscheduled matches",
+    )
 
     args = parser.parse_args()
     if args.today:
@@ -56,18 +63,14 @@ async def main():
     else:
         today = date.today()
 
-    current = today - timedelta(days=args.report - 1)
-    msg = ""
-
-    while current <= today:
-        day_before = current - timedelta(days=1)
-
-        for group in League(season=args.season).groups:
-            duels = group.wrong_outcome(day_before)
-            for duel in duels:
-                msg += f"⚠️ Dubious duel outcome ({current}): {duel.html()}\n"
-
-        current = current + timedelta(days=1)
+    if args.unscheduled:
+        group_id = config["telegram"]["groups"][0]["id"]
+        thread_id = config["telegram"]["groups"][0]["thread_id"]
+        msg = _unscheduled_duels_msg(args.season)
+    else:
+        group_id = config["telegram"]["control_group"]["id"]
+        thread_id = None
+        msg = _outcome_control_msg(args.season, args.report, today)
 
     if not msg:
         sys.exit(0)
@@ -79,13 +82,55 @@ async def main():
     token = config["telegram"]["token"]
     application = Application.builder().token(token).build()
     bot = application.bot
-    group_id = config["telegram"]["control_group"]["id"]
-    await bot.send_message(
-        chat_id=group_id,
-        text=msg,
-        parse_mode=tconstants.ParseMode.HTML,
-        disable_web_page_preview=True,
-    )
+    kwargs = {
+        "chat_id": group_id,
+        "text": msg,
+        "parse_mode": tconstants.ParseMode.HTML,
+        "disable_web_page_preview": True,
+    }
+    if thread_id:
+        kwargs["message_thread_id"] = thread_id
+
+    await bot.send_message(**kwargs)
+
+
+def _outcome_control_msg(season: int, days: int, today: date) -> str:
+    current = today - timedelta(days=days - 1)
+    msg = ""
+
+    while current <= today:
+        day_before = current - timedelta(days=1)
+
+        for group in League(season=season).groups:
+            duels = group.wrong_outcome(day_before)
+            for duel in duels:
+                msg += f"⚠️ Dubious duel outcome ({current}): {duel.html()}\n"
+
+        current = current + timedelta(days=1)
+
+    return msg
+
+
+def _unscheduled_duels_msg(season: int) -> str:
+    header = "⚠️ <b>Duelos sin fecha</b> ⚠️"
+    footer = "⏳ <b>Último día para jugar:</b> domingo ⏳\n"
+    footer += "Recuerda que el domingo es el último día para jugar los duelos. Si no se juega el duelo y no hay comunicación previa con el comité, ambos jugadores serán dados como perdedores. Además, se podrán aplicar las sanciones correspondientes según el reglamento.\n\n"
+    footer += "📩 Si tu rival no responde, por favor, contacta con nosotros en laliga@carcassonnespain.es para que podamos ayudarte."
+
+    msg = ""
+    for group in League(season=season).groups:
+        for unscheduled_duel in group.unschedule():
+            player_1 = unscheduled_duel[0]
+            player_2 = unscheduled_duel[1]
+
+            name_1 = player_1.telegram or player_1.name
+            name_2 = player_2.telegram or player_2.name
+
+            msg += f"{name_1} - {name_2}\n"
+
+    if msg:
+        return f"{header}\n\n{msg}\n{footer}"
+    return ""
 
 
 if __name__ == "__main__":
