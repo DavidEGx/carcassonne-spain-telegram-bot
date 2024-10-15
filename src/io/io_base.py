@@ -1,4 +1,5 @@
 """Common IO stuff."""
+
 from abc import ABC, abstractmethod
 from datetime import date, timedelta
 from typing import Any

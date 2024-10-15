@@ -1,4 +1,5 @@
 """Module for Carcassonne Spain Google Calendar."""
+
 from datetime import date, datetime, timedelta
 from functools import cache
 from typing import Any, Optional

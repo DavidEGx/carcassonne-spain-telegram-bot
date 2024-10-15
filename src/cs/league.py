@@ -1,4 +1,5 @@
 """Module containg Carcassonne Spain League class."""
+
 from functools import cache
 from typing import Optional
 

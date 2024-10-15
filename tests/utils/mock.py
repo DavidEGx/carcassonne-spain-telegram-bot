@@ -1,4 +1,5 @@
 """Mock functions for testing."""
+
 import csv
 
 from src.cs.group import Group
