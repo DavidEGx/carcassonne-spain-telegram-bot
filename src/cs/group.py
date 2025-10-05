@@ -51,6 +51,8 @@ class Group:
         for row in self._read_csv(url):
             if not row["player1"] or not row["player2"]:
                 continue
+            if row["player1"].strip() == "" or row["player2"].strip() == "":
+                continue
 
             start = utc_datetime(row["date"])
             player_1 = self._find_player(row["player1"])

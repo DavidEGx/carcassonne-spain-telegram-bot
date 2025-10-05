@@ -48,6 +48,7 @@ class BGA:
         # Finally I can return a session that can be used
         return s
 
+    # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches
     def check_duel(self, duel: Duel) -> bool:
         """Check submitted outcome for single duel matches reality."""
         if duel.outcome_timestamp is None:
@@ -97,19 +98,24 @@ class BGA:
         p1_real_score = 0
         p2_real_score = 0
         for table in tables:
-            p1, p2 = [x.lower() for x in table["player_names"].split(",")]
-            r1, r2 = [int(x) for x in table["scores"].split(",")]
+            elo_win = int(table.get("elo_win", 0) or 0)
 
-            if r1 == r2:
-                logger.warning("Tie, need to manually check %s", duel)
-                return False
-
-            if p1 == duel.p1.name.lower() and r1 > r2:
+            if elo_win > 0:
                 p1_real_score += 1
-            elif p2 == duel.p2.name.lower() and r2 > r1:
-                p1_real_score += 1
-            else:
+            elif elo_win < 0:
                 p2_real_score += 1
+            else:
+                # No ELO win, either unranked game or player with low elo.
+                logger.warning("No ELO win, check %s", duel)
+                p1, p2 = [x.lower() for x in table["player_names"].split(",")]
+                rank1 = int(table["ranks"].split(",")[0])
+
+                if p1 == duel.p1.name.lower() and rank1 == 1:
+                    p1_real_score += 1
+                elif p2 == duel.p1.name.lower() and rank1 == 1:
+                    p1_real_score += 1
+                else:
+                    p2_real_score += 1
 
         if duel.p1_score != p1_real_score or duel.p2_score != p2_real_score:
             logger.warning(
